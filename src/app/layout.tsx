@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={pretendard.className}>
         <Header />
-        <div className="pt-[4rem]">{children}</div>
+        <div className="pt-[5rem]">{children}</div>
       </body>
     </html>
   );
