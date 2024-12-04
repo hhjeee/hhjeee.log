@@ -21,7 +21,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={pretendard.className}>
+        <Header />
+        <div className="pt-[4rem]">{children}</div>
+      </body>
     </html>
   );
 }
