@@ -20,6 +20,7 @@ export function getAllPosts(): PostData[] {
       title: data.title,
       date: data.date,
       desc: data.desc,
+      image: data.image,
     } as PostData;
   });
 }
