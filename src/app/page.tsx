@@ -1,16 +1,22 @@
-import { getPostData } from "@/lib/posts";
-import { serialize } from "next-mdx-remote/serialize";
-import MDXRenderer from "@/components/MDXRenderer";
+import Link from "next/link";
+import { getAllPosts } from "@/lib/posts";
+import { PostData } from "@/types/post";
 
-const MainPage = async () => {
-  const { meta, content } = getPostData("setup");
-  const mdxContent = await serialize(content);
+const MainPage = () => {
+  const posts: PostData[] = getAllPosts();
 
   return (
-    <div className="prose mx-auto my-[2rem]">
-      <h1>{meta.title}</h1>
-      <p>{new Date(meta.date).toLocaleDateString()}</p>
-      <MDXRenderer content={mdxContent} />
+    <div className="prose mx-auto p-4">
+      <ul>
+        {posts.map((post) => (
+          <li key={post.slug} className="mb-4">
+            <Link href={`/posts/${post.slug}`}>
+              <h2>{post.title}</h2>
+              <p>{new Date(post.date).toLocaleDateString()}</p>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
