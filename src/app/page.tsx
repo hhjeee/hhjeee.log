@@ -9,19 +9,18 @@ const MainPage = () => {
 
   return (
     <div className="w-[65%] mx-auto my-[2rem]">
-      <div className="grid grid-cols-2 gap-[1rem]">
+      <div className="columns-1 sm:columns-2 gap-4">
         {posts.map((post) => (
           <div key={post.slug}>
             <Link
               href={`/posts/${post.slug}`}
-              className="p-[1rem] border no-underline block rounded-lg shadow-sm flex flex-col gap-[0.5rem] hover:shadow-lg"
+              className="break-inside-avoid mb-[1rem] p-[1rem] border no-underline block rounded-lg shadow-sm flex flex-col gap-[0.5rem] hover:shadow-lg"
             >
               {post.image && (
-                <div className="relative w-full min-h-[15rem] rounded-md overflow-hidden">
+                <div className="relative w-full min-h-[10rem] max-h-[25rem] mb-[0.5rem] rounded-md overflow-hidden">
                   <Image
                     src={post.image}
                     alt={post.title}
-                    layout="intrinsic"
                     width={500}
                     height={500}
                     className="object-cover"
