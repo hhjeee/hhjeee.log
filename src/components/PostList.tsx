@@ -16,11 +16,11 @@ const PostList = ({ posts, categoriesWithCount }: { posts: PostData[]; categorie
   return (
     <div>
       {/* 카테고리 버튼 */}
-      <div className="flex space-x-4 mb-6">
+      <div className="flex space-x-4 mb-6 font-semibold">
         <button
           onClick={() => setSelectedCategory(null)}
           className={`px-4 py-2 rounded-full ${
-            !selectedCategory ? "bg-[#808080] text-white" : "bg-[#E2E2E2]"
+            !selectedCategory ? "bg-[#000000] text-white" : "bg-[#FFFFFF]"
           }`}
         >
           All ({posts.length})
@@ -30,7 +30,7 @@ const PostList = ({ posts, categoriesWithCount }: { posts: PostData[]; categorie
             key={category}
             onClick={() => setSelectedCategory(category)}
             className={`px-4 py-2 rounded-full ${
-              selectedCategory === category ? "bg-[#808080] text-white" : "bg-[#E2E2E2]"
+              selectedCategory === category ? "bg-[#000000] text-white" : "bg-[#FFFFFF]"
             }`}
           >
             {category} ({count})
