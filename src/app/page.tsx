@@ -1,41 +1,17 @@
-import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
+import PostList from "@/components/PostList";
 import { PostData } from "@/types/post";
-import dayjs from "dayjs";
-import Image from "next/image";
 
 const MainPage = () => {
   const posts: PostData[] = getAllPosts();
+  const categoriesWithCount = posts.reduce((acc, post) => {
+    acc[post.category] = (acc[post.category] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
 
   return (
     <div className="w-[65%] mx-auto my-[2rem]">
-      <div className="columns-1 sm:columns-2 gap-4">
-        {posts.map((post) => (
-          <div key={post.slug}>
-            <Link
-              href={`/posts/${post.slug}`}
-              className="break-inside-avoid mb-[1rem] p-[1rem] border no-underline block rounded-lg shadow-sm flex flex-col gap-[0.5rem] hover:shadow-lg"
-            >
-              {post.image && (
-                <div className="relative w-full min-h-[10rem] max-h-[25rem] mb-[0.5rem] rounded-md overflow-hidden">
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    width={500}
-                    height={500}
-                    className="object-cover"
-                  />
-                </div>
-              )}
-              <h3 className="font-semibold text-xl">{post.title}</h3>
-              <p className="text-gray-500">{post.desc}</p>
-              <p className="font-medium m-0 text-sm no-underline text-gray-500">
-                {dayjs(post.date).format("YYYY년 MM월 DD일")}
-              </p>
-            </Link>
-          </div>
-        ))}
-      </div>
+      <PostList posts={posts} categoriesWithCount={categoriesWithCount} />
     </div>
   );
 };
