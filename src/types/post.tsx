@@ -7,4 +7,5 @@ export interface PostMeta {
 
 export interface PostData extends PostMeta {
   slug: string;
+  category: string;
 }
