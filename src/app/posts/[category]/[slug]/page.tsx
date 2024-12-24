@@ -8,7 +8,8 @@ const PostPage = async ({
 }: {
   params: { category: string; slug: string };
 }) => {
-  const { meta, content } = getPostData(params.category, params.slug);
+  const { category, slug } = await params;
+  const { meta, content } = getPostData(category, slug);
   const mdxContent = await serialize(content);
 
   return (
