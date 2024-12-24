@@ -1,13 +1,19 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { PostData } from "@/types/post";
-import dayjs from "dayjs";
-import Image from "next/image";
-import CategoryBar from "./categoryBar";
+import { useState } from 'react';
+import Link from 'next/link';
+import { PostData } from '@/types/post';
+import dayjs from 'dayjs';
+import Image from 'next/image';
+import CategoryBar from './categoryBar';
 
-const PostList = ({ posts, categoriesWithCount }: { posts: PostData[]; categoriesWithCount: Record<string, number> }) => {
+const PostList = ({
+  posts,
+  categoriesWithCount,
+}: {
+  posts: PostData[];
+  categoriesWithCount: Record<string, number>;
+}) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const filteredPosts = selectedCategory
@@ -15,17 +21,14 @@ const PostList = ({ posts, categoriesWithCount }: { posts: PostData[]; categorie
     : posts;
 
   return (
-    <div>
-      {/* 카테고리 버튼 */}
+    <div className="flex flex-col">
       <CategoryBar
         categoriesWithCount={categoriesWithCount}
         totalPostsCount={posts.length}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
       />
-
-      {/* 게시물 리스트 */}
-      <div className="columns-1 sm:columns-2 gap-4">
+      <div className="mt-[5rem] columns-1 sm:columns-2 gap-4">
         {filteredPosts.map((post) => (
           <div key={post.slug}>
             <Link
@@ -46,7 +49,7 @@ const PostList = ({ posts, categoriesWithCount }: { posts: PostData[]; categorie
               <h3 className="font-semibold text-xl">{post.title}</h3>
               <p className="text-gray-500">{post.desc}</p>
               <p className="font-medium m-0 text-sm no-underline text-gray-500">
-                {dayjs(post.date).format("YYYY년 MM월 DD일")}
+                {dayjs(post.date).format('YYYY년 MM월 DD일')}
               </p>
             </Link>
           </div>
