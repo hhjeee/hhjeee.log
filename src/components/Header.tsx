@@ -1,10 +1,10 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 const Header = () => {
   return (
-    <div className="fixed bg-white w-full py-[1.5rem] px-[5rem] shadow-md flex items-center justify-between">
+    <div className="fixed bg-white w-full h-[4rem] px-[5rem] border-b-2 border-[#f2f4f6] flex items-center justify-between">
       <Link href="/">
-        <div className="text-xl font-bold text-gradient">hhjeee.log</div>
+        <div className="text-xl font-semibold text-gradient">hhjeee.log</div>
       </Link>
       <div>dark</div> {/* TODO icon 변경, 다크모드 기능 추가 */}
     </div>
