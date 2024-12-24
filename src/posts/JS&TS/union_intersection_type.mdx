@@ -1,5 +1,5 @@
 ---
-title: "union type과 intersection type"
+title: 'union type과 intersection type'
 date: 2024-12-23
 desc: union type과 intersection type 알아보기
 ---
@@ -7,15 +7,15 @@ desc: union type과 intersection type 알아보기
 ### Union Type
 
 type a = string | number
-string이거나 number이거나 
+string이거나 number이거나
 합집합의 개념
 
 ### Intersection Type
+
 모두 할당할 수 있는 값만 남기고 없다면 never가 할당된다.
 
 type t1 = 'a' | 'b'
 type t2 = 'b' | 'c'
 
-type result = t1 & t2 
+type result = t1 & t2
 위와 같은 상황에서 t1과 t2의 공통인 'b'가 된다.
-

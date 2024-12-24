@@ -9,7 +9,7 @@ const Post = ({ posts }: { posts: PostData[] }) => {
       {posts.map((post) => (
         <div key={post.slug}>
           <Link
-            href={`/posts/${post.slug}`}
+            href={`/posts/${post.category}/${post.slug}`}
             className="break-inside-avoid mb-[1rem] p-[1rem] border no-underline block rounded-lg shadow-sm flex flex-col gap-[0.5rem] hover:shadow-lg"
           >
             {post.image && (
