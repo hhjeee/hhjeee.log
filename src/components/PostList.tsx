@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PostData } from "@/types/post";
 import dayjs from "dayjs";
 import Image from "next/image";
+import CategoryBar from "./categoryBar";
 
 const PostList = ({ posts, categoriesWithCount }: { posts: PostData[]; categoriesWithCount: Record<string, number> }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -16,27 +17,12 @@ const PostList = ({ posts, categoriesWithCount }: { posts: PostData[]; categorie
   return (
     <div>
       {/* 카테고리 버튼 */}
-      <div className="flex space-x-4 mb-6 font-semibold">
-        <button
-          onClick={() => setSelectedCategory(null)}
-          className={`px-4 py-2 rounded-full ${
-            !selectedCategory ? "bg-[#000000] text-white" : "bg-[#FFFFFF]"
-          }`}
-        >
-          All ({posts.length})
-        </button>
-        {Object.entries(categoriesWithCount).map(([category, count]) => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`px-4 py-2 rounded-full ${
-              selectedCategory === category ? "bg-[#000000] text-white" : "bg-[#FFFFFF]"
-            }`}
-          >
-            {category} ({count})
-          </button>
-        ))}
-      </div>
+      <CategoryBar
+        categoriesWithCount={categoriesWithCount}
+        totalPostsCount={posts.length}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
 
       {/* 게시물 리스트 */}
       <div className="columns-1 sm:columns-2 gap-4">
