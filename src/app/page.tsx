@@ -1,5 +1,5 @@
+import PostSection from '@/components/PostSection';
 import { getAllPosts } from '@/lib/posts';
-import PostList from '@/components/PostList';
 import { PostData } from '@/types/post';
 
 const MainPage = () => {
@@ -14,7 +14,7 @@ const MainPage = () => {
 
   return (
     <div className="w-[65%] mx-auto mb-[2rem]">
-      <PostList posts={posts} categoriesWithCount={categoriesWithCount} />
+      <PostSection posts={posts} categoriesWithCount={categoriesWithCount} />
     </div>
   );
 };
