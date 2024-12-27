@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import CategoryBar from './categoryBar';
-import Post from './post';
+import CategoryBar from './CategoryBar';
+import Post from './Post';
 import { PostData } from '@/types/post';
 
 const PostSection = ({
