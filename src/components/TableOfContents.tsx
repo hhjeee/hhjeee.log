@@ -9,7 +9,7 @@ const TableOfContents = ({ headings }: { headings: Heading[] }) => {
           <p key={heading.id} className={`ml-${heading.level * 2} my-1`}>
             <a
               href={`#${heading.id}`}
-              className="text-[#6B7684] no-underline hover:text-[#333D4B] text-sm"
+              className="text-lightGray no-underline hover:text-darkGray text-sm"
             >
               {heading.text}
             </a>

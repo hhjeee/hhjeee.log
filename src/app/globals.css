@@ -23,7 +23,7 @@ body {
   transition: all 0.8s;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-image: linear-gradient(90deg, #808080, #808080 50%, #000000 0);
+  background-image: linear-gradient(90deg, #a0d468, #a0d468 50%, #6b7684 0);
   background-size: 200% 100%;
   background-position: 100%;
   color: #000000;
