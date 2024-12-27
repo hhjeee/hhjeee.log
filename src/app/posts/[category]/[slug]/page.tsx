@@ -1,4 +1,5 @@
 import MDXRenderer from '@/components/MDXRenderer';
+import TableOfContents from '@/components/TableOfContents';
 import { getPostData } from '@/lib/posts';
 import rehypeExtractHeadings, { Heading } from '@/lib/rehypeExtractHeading';
 import dayjs from 'dayjs';
@@ -20,13 +21,18 @@ const PostPage = async ({
   });
 
   return (
-    <div className="prose mx-auto my-[2rem]">
-      <h1>{meta.title}</h1>
-      <p className="font-medium m-0">
-        {dayjs(meta.date).format('YYYY년 MM월 DD일')}
-      </p>
-      <hr className="my-[1rem]" />
-      <MDXRenderer content={mdxContent} />
+    <div className="flex prose mx-auto my-[2rem]">
+      <div className="prose">
+        <h1>{meta.title}</h1>
+        <p className="font-medium m-0">
+          {dayjs(meta.date).format('YYYY년 MM월 DD일')}
+        </p>
+        <hr className="my-[1rem]" />
+        <MDXRenderer content={mdxContent} />
+      </div>
+      <div>
+        <TableOfContents headings={headings} />
+      </div>
     </div>
   );
 };
