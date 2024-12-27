@@ -21,8 +21,8 @@ const PostPage = async ({
   });
 
   return (
-    <div className="flex prose mx-auto my-[2rem]">
-      <div className="prose">
+    <div className="flex my-[2rem] prose mx-auto">
+      <div>
         <h1>{meta.title}</h1>
         <p className="font-medium m-0">
           {dayjs(meta.date).format('YYYY년 MM월 DD일')}
@@ -30,7 +30,7 @@ const PostPage = async ({
         <hr className="my-[1rem]" />
         <MDXRenderer content={mdxContent} />
       </div>
-      <div>
+      <div className="relative">
         <TableOfContents headings={headings} />
       </div>
     </div>
