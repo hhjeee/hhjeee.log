@@ -21,7 +21,7 @@ const PostPage = async ({
   });
 
   return (
-    <div className="flex my-[2rem] prose mx-auto">
+    <div className="relative my-[2rem] prose mx-auto">
       <div>
         <h1>{meta.title}</h1>
         <p className="font-medium m-0">
@@ -30,9 +30,7 @@ const PostPage = async ({
         <hr className="my-[1rem]" />
         <MDXRenderer content={mdxContent} />
       </div>
-      <div className="relative">
-        <TableOfContents headings={headings} />
-      </div>
+      <TableOfContents headings={headings} />
     </div>
   );
 };
