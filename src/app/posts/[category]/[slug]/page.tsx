@@ -1,5 +1,6 @@
 import MDXRenderer from '@/components/MDXRenderer';
 import { getPostData } from '@/lib/posts';
+import rehypeExtractHeadings, { Heading } from '@/lib/rehypeExtractHeading';
 import dayjs from 'dayjs';
 import { serialize } from 'next-mdx-remote/serialize';
 
@@ -10,7 +11,13 @@ const PostPage = async ({
 }) => {
   const { category, slug } = await params;
   const { meta, content } = getPostData(category, slug);
-  const mdxContent = await serialize(content);
+
+  const headings: Heading[] = [];
+  const mdxContent = await serialize(content, {
+    mdxOptions: {
+      rehypePlugins: [[rehypeExtractHeadings, headings]],
+    },
+  });
 
   return (
     <div className="prose mx-auto my-[2rem]">
