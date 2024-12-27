@@ -7,7 +7,10 @@ const TableOfContents = ({ headings }: { headings: Heading[] }) => {
       <div className="sticky ml-6 top-20">
         {headings.map((heading) => (
           <p key={heading.id} className={`ml-${heading.level * 2} my-1`}>
-            <a href={`#${heading.id}`} className="text-[#6B7684] no-underline">
+            <a
+              href={`#${heading.id}`}
+              className="text-[#6B7684] no-underline hover:text-[#333D4B] text-sm"
+            >
               {heading.text}
             </a>
           </p>
