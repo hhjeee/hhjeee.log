@@ -1,5 +1,5 @@
 import MDXRenderer from '@/components/MDXRenderer';
-import PostHeader from '@/components/postDetail/postHeader';
+import PostHeader from '@/components/postDetail/PostHeader';
 import TableOfContents from '@/components/TableOfContents';
 import { getPostData } from '@/lib/posts';
 import rehypeExtractHeadings, { Heading } from '@/lib/rehypeExtractHeading';
