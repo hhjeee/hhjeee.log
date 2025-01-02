@@ -6,7 +6,7 @@ const Header = () => {
       <Link href="/">
         <div className="text-xl font-semibold text-gradient">hhjeee.log</div>
       </Link>
-      <div>dark</div> {/* TODO icon 변경, 다크모드 기능 추가 */}
+      {/* <div>dark</div> TODO 다크모드 기능 추가 */}
     </div>
   );
 };

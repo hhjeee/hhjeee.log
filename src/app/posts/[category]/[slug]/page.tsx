@@ -22,7 +22,7 @@ const PostPage = async ({
   });
 
   return (
-    <div className="relative my-[2rem] prose mx-auto">
+    <div className="relative py-[2rem] prose mx-auto">
       <ScrollStatusBar />
       <PostHeader meta={meta} />
       <MDXRenderer content={mdxContent} />
