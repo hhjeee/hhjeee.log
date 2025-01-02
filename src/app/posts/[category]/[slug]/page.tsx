@@ -1,6 +1,7 @@
-import MDXRenderer from '@/components/MDXRenderer';
+import MDXRenderer from '@/components/postDetail/MDXRenderer';
 import PostHeader from '@/components/postDetail/PostHeader';
-import TableOfContents from '@/components/TableOfContents';
+import TableOfContents from '@/components/postDetail/TableOfContents';
+import ScrollStatusBar from '@/components/ScrollStatusBar';
 import { getPostData } from '@/lib/posts';
 import rehypeExtractHeadings, { Heading } from '@/lib/rehypeExtractHeading';
 import { serialize } from 'next-mdx-remote/serialize';
@@ -22,6 +23,7 @@ const PostPage = async ({
 
   return (
     <div className="relative py-[2rem] prose mx-auto">
+      <ScrollStatusBar />
       <PostHeader meta={meta} />
       <MDXRenderer content={mdxContent} />
       <TableOfContents headings={headings} />
