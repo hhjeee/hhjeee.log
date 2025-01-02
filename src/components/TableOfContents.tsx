@@ -5,43 +5,38 @@ import { Heading } from '@/lib/rehypeExtractHeading';
 
 const TableOfContents = ({ headings }: { headings: Heading[] }) => {
   const [activeIds, setActiveIds] = useState<string[]>([]);
+  const [lastActiveId, setLastActiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const id = entry.target.id;
-          if (entry.isIntersecting) {
-            setActiveIds((prev) => [...new Set([...prev, id])]);
-          } else {
-            setActiveIds((prev) => prev.filter((activeId) => activeId !== id));
-          }
-        });
-      },
-      {
-        rootMargin: '0px 0px -20% 0px', //TODO 세부 조정
-        threshold: 0.5,
+    const observer = new IntersectionObserver((entries) => {
+      const visibleIds: string[] = [];
+
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          visibleIds.push(entry.target.id);
+        }
+      });
+
+      if (visibleIds.length > 0) {
+        setActiveIds(visibleIds);
+        setLastActiveId(visibleIds[visibleIds.length - 1]);
+      } else if (lastActiveId) {
+        setActiveIds([lastActiveId]);
       }
-    );
+    });
 
     const elements = document.querySelectorAll('h1, h2, h3');
     elements.forEach((el) => observer.observe(el));
 
     return () => {
-      elements.forEach((el) => observer.unobserve(el));
+      elements.forEach((el) => observer.observe(el));
     };
   }, []);
-
-  // const handleClick = (id: number) => {
-  //   document
-  //     .getElementById(id.toString())
-  //     ?.scrollIntoView({ behavior: 'smooth' });
-  // };
 
   const handleClick = (id: number) => {
     const element = document.getElementById(id.toString());
     if (element) {
-      const offset = 80; // TODO 헤더 높이 맞춰 조정
+      const offset = 64; // header 4rem
       const elementPosition =
         element.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition - offset;
