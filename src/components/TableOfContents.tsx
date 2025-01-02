@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Heading } from '@/lib/rehypeExtractHeading';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
