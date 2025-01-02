@@ -20,10 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={pretendard.className}>
+    <html lang="en" className="h-full bg-white">
+      <body className={`${pretendard.className} h-full`}>
         <Header />
-        <div className="pt-[4rem]">{children}</div>
+        <div className="pt-[4rem] h-full">{children}</div>
       </body>
     </html>
   );
