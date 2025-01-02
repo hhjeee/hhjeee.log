@@ -1,37 +1,9 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Heading } from '@/lib/rehypeExtractHeading';
+import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 
 const TableOfContents = ({ headings }: { headings: Heading[] }) => {
-  const [activeIds, setActiveIds] = useState<string[]>([]);
-  const [lastActiveId, setLastActiveId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      const visibleIds: string[] = [];
-
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          visibleIds.push(entry.target.id);
-        }
-      });
-
-      if (visibleIds.length > 0) {
-        setActiveIds(visibleIds);
-        setLastActiveId(visibleIds[visibleIds.length - 1]);
-      } else if (lastActiveId) {
-        setActiveIds([lastActiveId]);
-      }
-    });
-
-    const elements = document.querySelectorAll('h1, h2, h3');
-    elements.forEach((el) => observer.observe(el));
-
-    return () => {
-      elements.forEach((el) => observer.observe(el));
-    };
-  }, []);
+  const activeIds = useIntersectionObserver('h1, h2, h3');
 
   const handleClick = (id: number) => {
     const element = document.getElementById(id.toString());
