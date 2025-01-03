@@ -12,8 +12,10 @@ export default {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         primary: '#A0D468',
-        darkGray: '#333D48',
-        lightGray: '#6B7684',
+        primary2: '#79BE2D',
+        gray1: '#F2F4F6',
+        gray2: '#6B7684',
+        gray3: '#333D48',
       },
       typography: {
         DEFAULT: {

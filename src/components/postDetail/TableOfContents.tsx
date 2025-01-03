@@ -30,13 +30,13 @@ const TableOfContents = ({ headings }: { headings: Heading[] }) => {
             key={heading.id}
             className={`ml-${heading.level * 2} my-1 pl-2 border-l-4 ${
               activeIds.includes(heading.id.toString())
-                ? 'border-primary text-darkGray font-semibold'
+                ? 'border-primary text-gray3 font-semibold'
                 : 'border-transparent'
             }`}
           >
             <button
               onClick={() => handleClick(heading.id)}
-              className="text-lightGray no-underline hover:font-semibold text-sm text-start"
+              className="text-gray2 no-underline hover:font-semibold text-sm text-start"
             >
               {heading.text}
             </button>

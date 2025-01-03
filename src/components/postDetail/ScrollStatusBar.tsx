@@ -21,7 +21,7 @@ const ScrollStatusBar = () => {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 w-full h-1 bg-[#c1c8d0] z-50">
+    <div className="fixed top-0 left-0 w-full h-1 bg-gray1 z-50">
       <div
         className="h-full bg-primary"
         style={{ width: `${scrollPercentage}%` }}

@@ -17,8 +17,8 @@ const CategoryBar = ({
         onClick={() => setSelectedCategory(null)}
         className={`py-2 px-4 ${
           !selectedCategory
-            ? 'text-darkGray font-semibold border-b-2 border-darkGray'
-            : 'text-lightGray'
+            ? 'text-gray3 font-semibold border-b-2 border-gray3'
+            : 'text-gray2'
         }`}
       >
         <span className="hover:font-semibold">전체 ({totalPostsCount})</span>
@@ -29,8 +29,8 @@ const CategoryBar = ({
           onClick={() => setSelectedCategory(category)}
           className={`py-2 px-4 hover:font-semibold ${
             selectedCategory === category
-              ? 'text-darkGray font-semibold border-b-2 border-darkGray'
-              : 'text-lightGray'
+              ? 'text-gray3 font-semibold border-b-2 border-gray3'
+              : 'text-gray2'
           }`}
         >
           {category} ({count})
