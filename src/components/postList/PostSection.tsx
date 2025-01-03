@@ -1,30 +1,34 @@
 'use client';
 
-import { useState } from 'react';
 import CategoryBar from './CategoryBar';
 import Post from './Post';
 import { PostData } from '@/types/post';
 
 const PostSection = ({
   posts,
-  categoriesWithCount,
+  selectedCategory,
 }: {
   posts: PostData[];
-  categoriesWithCount: Record<string, number>;
+  selectedCategory?: string;
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
   const filteredPosts = selectedCategory
     ? posts.filter((post) => post.category === selectedCategory)
     : posts;
+
+  const categoriesWithCount = posts.reduce(
+    (acc, post) => {
+      acc[post.category] = (acc[post.category] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   return (
     <div className="flex flex-col">
       <CategoryBar
         categoriesWithCount={categoriesWithCount}
         totalPostsCount={posts.length}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
+        selectedCategory={selectedCategory || null}
       />
       <Post posts={filteredPosts} />
     </div>

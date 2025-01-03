@@ -1,20 +1,32 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+
 interface CategoryBarProps {
   categoriesWithCount: Record<string, number>;
   totalPostsCount: number;
   selectedCategory: string | null;
-  setSelectedCategory: (category: string | null) => void;
 }
 
 const CategoryBar = ({
   categoriesWithCount,
   totalPostsCount,
   selectedCategory,
-  setSelectedCategory,
 }: CategoryBarProps) => {
+  const router = useRouter();
+
+  const handleCategoryClick = (category: string | null) => {
+    if (category === null) {
+      router.push('/');
+    } else {
+      router.push(`/${decodeURIComponent(category)}`);
+    }
+  };
+
   return (
-    <div className="fixed bg-[#FFF] z-10 pt-[1rem] mb-[1rem] left-1/2 transform -translate-x-1/2 w-[65%] flex space-x-4 border-b-2 border-[#f2f4f6]">
+    <div className="fixed bg-[#FFF] z-10 pt-[1rem] mb-[1rem] left-1/2 transform -translate-x-1/2 w-[65%] flex space-x-4 border-b-2 border-gray1">
       <button
-        onClick={() => setSelectedCategory(null)}
+        onClick={() => handleCategoryClick(null)}
         className={`py-2 px-4 ${
           !selectedCategory
             ? 'text-gray3 font-semibold border-b-2 border-gray3'
@@ -26,7 +38,7 @@ const CategoryBar = ({
       {Object.entries(categoriesWithCount).map(([category, count]) => (
         <button
           key={category}
-          onClick={() => setSelectedCategory(category)}
+          onClick={() => handleCategoryClick(category)}
           className={`py-2 px-4 hover:font-semibold ${
             selectedCategory === category
               ? 'text-gray3 font-semibold border-b-2 border-gray3'
@@ -39,4 +51,5 @@ const CategoryBar = ({
     </div>
   );
 };
+
 export default CategoryBar;
