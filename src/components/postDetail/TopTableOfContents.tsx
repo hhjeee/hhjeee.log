@@ -28,17 +28,14 @@ const TopTableOfContents = ({ headings }: { headings: Heading[] }) => {
       {headings.map((heading: Heading) => {
         const marginLeft = heading.level * 2;
         return (
-          <p
-            key={heading.id}
-            className={`ml-${marginLeft} my-1.5 pl-2 border-l-4 ${
-              activeIds.includes(heading.id.toString())
-                ? 'border-primary text-gray3 font-semibold'
-                : 'border-transparent'
-            }`}
-          >
+          <p key={heading.id} className={`ml-${marginLeft} my-1.5`}>
             <button
               onClick={() => handleClick(heading.id)}
-              className="text-gray2 no-underline hover:font-semibold text-base text-start"
+              className={`text-gray2 no-underline hover:font-semibold text-base text-start ${
+                activeIds.includes(heading.id.toString())
+                  ? 'text-primary font-semibold'
+                  : ''
+              }`}
             >
               {heading.text}
             </button>
