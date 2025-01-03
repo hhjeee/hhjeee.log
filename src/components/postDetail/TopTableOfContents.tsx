@@ -4,7 +4,7 @@ import React from 'react';
 import { Heading } from '@/lib/rehypeExtractHeading';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 
-const TableOfContents = ({ headings }: { headings: Heading[] }) => {
+const TopTableOfContents = ({ headings }: { headings: Heading[] }) => {
   const activeIds = useIntersectionObserver('h1, h2, h3');
 
   const handleClick = (id: number) => {
@@ -22,13 +22,15 @@ const TableOfContents = ({ headings }: { headings: Heading[] }) => {
     }
   };
 
+  if (headings.length === 0) return null;
   return (
-    <nav className="absolute top-0 left-full w-[200px] h-full hidden lg:block">
-      <div className="sticky ml-6 top-20">
-        {headings.map((heading) => (
+    <nav className="lg:hidden xl:hidden">
+      {headings.map((heading: Heading) => {
+        const marginLeft = heading.level * 2;
+        return (
           <p
             key={heading.id}
-            className={`ml-${heading.level * 2} my-1 pl-2 border-l-4 ${
+            className={`ml-${marginLeft} my-1.5 pl-2 border-l-4 ${
               activeIds.includes(heading.id.toString())
                 ? 'border-primary text-gray3 font-semibold'
                 : 'border-transparent'
@@ -36,15 +38,16 @@ const TableOfContents = ({ headings }: { headings: Heading[] }) => {
           >
             <button
               onClick={() => handleClick(heading.id)}
-              className="text-gray2 no-underline hover:font-semibold text-sm text-start"
+              className="text-gray2 no-underline hover:font-semibold text-base text-start"
             >
               {heading.text}
             </button>
           </p>
-        ))}
-      </div>
+        );
+      })}
+      <hr className="my-[1rem] h-0.5 bg-gray1" />
     </nav>
   );
 };
 
-export default TableOfContents;
+export default TopTableOfContents;

@@ -1,6 +1,7 @@
 import MDXRenderer from '@/components/postDetail/MDXRenderer';
 import PostHeader from '@/components/postDetail/PostHeader';
-import TableOfContents from '@/components/postDetail/TableOfContents';
+import SideTableOfContents from '@/components/postDetail/SideTableOfContents';
+import TopTableOfContents from '@/components/postDetail/TopTableOfContents';
 import ScrollStatusBar from '@/components/postDetail/ScrollStatusBar';
 import { getPostData } from '@/lib/posts';
 import rehypeExtractHeadings, { Heading } from '@/lib/rehypeExtractHeading';
@@ -25,8 +26,9 @@ const PostPage = async ({
     <div className="relative py-[2rem] prose mx-auto">
       <ScrollStatusBar />
       <PostHeader meta={meta} category={category} />
+      <TopTableOfContents headings={headings} />
+      <SideTableOfContents headings={headings} />
       <MDXRenderer content={mdxContent} />
-      <TableOfContents headings={headings} />
     </div>
   );
 };
