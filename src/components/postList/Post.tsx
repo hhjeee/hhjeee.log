@@ -10,7 +10,7 @@ const Post = ({ posts }: { posts: PostData[] }) => {
         <div key={post.slug}>
           <Link
             href={`/posts/${post.category}/${post.slug}`}
-            className="break-inside-avoid mb-[1rem] p-[1rem] border no-underline block rounded-lg shadow-sm flex flex-col gap-[0.5rem] hover:shadow-lg"
+            className="break-inside-avoid mb-[1rem] p-[1rem] border no-underline block rounded-lg shadow-sm flex flex-col gap-[0.5rem] hover:shadow-lg transition-shadow duration-300 ease-linear"
           >
             {post.image && (
               <div className="relative w-full min-h-[10rem] max-h-[25rem] mb-[0.5rem] rounded-md overflow-hidden">
