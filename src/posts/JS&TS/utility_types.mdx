@@ -1,0 +1,153 @@
+---
+title: 'utility types'
+date: 2025-01-02
+desc: 타입스크립트에서 제공하는 유틸리티 타입에 대해 알아보자
+---
+
+TypeScript는 일반적인 타입 변환을 쉽게 하기 위해서 몇 가지 유틸리티 타입을 제공한다.
+
+### Partial\<Type\>
+
+Type 집합의 모든 프로퍼티를 선택적으로 타입을 생성한다.
+주어진 타입의 모든 하위 타입 집합을 나타내는 타입을 반환한다.
+
+```tsx
+interface Todo {
+  title: string;
+  description: string;
+}
+
+function updateTodo(todo: Todo, fieldsToUpdate: Partial<Todo>) {
+  return { ...todo, ...fieldsToUpdate };
+}
+
+const todo1 = {
+  title: 'organize desk',
+  description: 'clear clutter',
+};
+
+const todo2 = updateTodo(todo1, {
+  description: 'throw out trash',
+});
+```
+
+### Required\<Type\>
+
+Type 집합의 모든 프로퍼티를 필수로 설정한 타입을 생성한다.
+
+```tsx
+interface Props {
+  a?: number;
+  b?: string;
+}
+
+const obj: Props = { a: 5 };
+
+const obj2: Required<Props> = { a: 5 };
+// Property 'b' is missing in type '{ a: number; }'
+// but required in type 'Required<Props>'.
+```
+
+### Readonly\<Type\>
+
+Type 집합의 모든 프로퍼티 읽기 전용(readonly)으로 설정한 타입을 생성한다.
+생성된 타입의 프로퍼티는 재할당될 수 없다.
+
+```tsx
+interface Todo {
+  title: string;
+}
+
+const todo: Readonly<Todo> = {
+  title: 'Delete inactive users',
+};
+
+todo.title = 'Hello';
+//Cannot assign to 'title' because it is a read-only property.
+```
+
+### Record\<Keys,Type\>
+
+타입 Type의 프로퍼티 키의 집합으로 타입을 생성한다.
+타입의 프로퍼티를 다른 타입에 매핑 시키는데 사용될 수 있다.
+
+```tsx
+interface PageInfo {
+  title: string;
+}
+
+type Page = 'home' | 'about' | 'contact';
+
+const nav: Record<Page, PageInfo> = {
+  about: { title: 'about' },
+  contact: { title: 'contact' },
+  home: { title: 'home' },
+};
+```
+
+### Pick\<Type, Keys\>
+
+Type에서 프로퍼티 Keys의 집합을 선택해 타입을 생성한다.
+
+```tsx
+interface Todo {
+  title: string;
+  description: string;
+  completed: boolean;
+}
+
+type TodoPreview = Pick<Todo, 'title' | 'completed'>;
+
+const todo: TodoPreview = {
+  title: 'Clean room',
+  completed: false,
+};
+```
+
+### Omit\<Type, Keys\>
+
+Type에서 모든 프로퍼티를 선택하고 키를 제거한 타입을 생성한다.
+
+```tsx
+interface Todo {
+  title: string;
+  description: string;
+  completed: boolean;
+}
+
+type TodoPreview = Omit<Todo, 'description'>;
+
+const todo: TodoPreview = {
+  title: 'Clean room',
+  completed: false,
+};
+```
+
+### Exclude\<Type, ExcludedUnion\>
+
+ExcludedUnion에 할당할 수 있는 모든 유니온 멤버를 Type에서 제외하여 타입을 생성한다.
+
+```tsx
+type T0 = Exclude<'a' | 'b' | 'c', 'a'>;
+//type T0 = "b" | "c"
+type T1 = Exclude<'a' | 'b' | 'c', 'a' | 'b'>;
+//type T1 = "c"
+type T2 = Exclude<string | number | (() => void), Function>;
+//type T2 = string | number
+```
+
+### Extract\<Type, Union\>
+
+Union에 할당할 수 있는 모든 유니온 멤버를 Type에서 가져와서 타입을 생성한다.
+
+```tsx
+type T0 = Extract<'a' | 'b' | 'c', 'a' | 'f'>;
+//type T0 = "a"
+type T1 = Extract<string | number | (() => void), Function>;
+//type T1 = () => void
+```
+
+<br />
+**참고자료**
+
+[https://www.typescriptlang.org/ko/docs/handbook/utility-types.html](https://www.typescriptlang.org/ko/docs/handbook/utility-types.html)
