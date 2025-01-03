@@ -24,7 +24,7 @@ const PostSection = ({
   );
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-[65%] mx-auto pb-[2rem">
       <CategoryBar
         categoriesWithCount={categoriesWithCount}
         totalPostsCount={posts.length}
