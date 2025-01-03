@@ -1,4 +1,4 @@
-import PostSection from '@/components/PostSection';
+import PostSection from '@/components/postList/PostSection';
 import { getAllPosts } from '@/lib/posts';
 import { PostData } from '@/types/post';
 
