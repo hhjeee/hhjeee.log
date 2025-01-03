@@ -13,7 +13,7 @@ const MainPage = () => {
   );
 
   return (
-    <div className="w-[65%] mx-auto mb-[2rem]">
+    <div className="w-[65%] mx-auto pb-[2rem]">
       <PostSection posts={posts} categoriesWithCount={categoriesWithCount} />
     </div>
   );
