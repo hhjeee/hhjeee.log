@@ -24,8 +24,8 @@ const Post = ({ posts }: { posts: PostData[] }) => {
               </div>
             )}
             <h3 className="font-semibold text-xl">{post.title}</h3>
-            <p className="text-gray-500">{post.desc}</p>
-            <p className="font-medium m-0 text-sm no-underline text-gray-500">
+            <p className="text-gray2">{post.desc}</p>
+            <p className="font-medium m-0 text-sm no-underline text-gray2">
               {dayjs(post.date).format('YYYY년 MM월 DD일')}
             </p>
           </Link>
