@@ -1,43 +1,49 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import matter from 'gray-matter';
 import { PostData, PostMeta } from '@/types/post';
 
 const postsDirectory = path.join(process.cwd(), 'src/posts');
 
-export function getAllPosts(): PostData[] {
-  const categories = fs.readdirSync(postsDirectory);
+export async function getAllPosts(): Promise<PostData[]> {
+  const categories = await fs.readdir(postsDirectory);
 
-  const posts = categories.flatMap((category) => {
-    const categoryPath = path.join(postsDirectory, category);
-    const fileNames = fs.readdirSync(categoryPath);
+  const posts = (
+    await Promise.all(
+      categories.map(async (category) => {
+        const categoryPath = path.join(postsDirectory, category);
+        const fileNames = await fs.readdir(categoryPath);
 
-    return fileNames.map((fileName) => {
-      const slug = fileName.replace(/\.mdx$/, '');
-      const filePath = path.join(categoryPath, fileName);
-      const fileContents = fs.readFileSync(filePath, 'utf8');
-      const { data } = matter(fileContents);
+        return Promise.all(
+          fileNames.map(async (fileName) => {
+            const slug = fileName.replace(/\.mdx$/, '');
+            const filePath = path.join(categoryPath, fileName);
+            const fileContents = await fs.readFile(filePath, 'utf8');
+            const { data } = matter(fileContents);
 
-      return {
-        slug,
-        category,
-        ...data,
-      } as PostData;
-    });
-  });
+            return {
+              slug,
+              category,
+              ...data,
+            } as PostData;
+          })
+        );
+      })
+    )
+  ).flat();
 
   posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return posts;
 }
 
-export function getPostData(
+export async function getPostData(
   category: string,
   slug: string
-): { meta: PostMeta; content: string } {
+): Promise<{ meta: PostMeta; content: string }> {
   const decodedCategory = decodeURIComponent(category);
   const filePath = path.join(postsDirectory, decodedCategory, `${slug}.mdx`);
-  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const fileContents = await fs.readFile(filePath, 'utf8');
   const { data, content } = matter(fileContents);
 
   return {
