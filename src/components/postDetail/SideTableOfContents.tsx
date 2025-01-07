@@ -10,7 +10,7 @@ const SideTableOfContents = ({ headings }: { headings: Heading[] }) => {
   const handleClick = (id: number) => {
     const element = document.getElementById(id.toString());
     if (element) {
-      const offset = 64; // header 4rem
+      const offset = 80; // header 4rem + a
       const elementPosition =
         element.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition - offset;

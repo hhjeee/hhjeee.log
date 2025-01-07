@@ -8,19 +8,15 @@ export const useIntersectionObserver = (selector: string) => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        const visibleIds: string[] = [];
-
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            visibleIds.push(entry.target.id);
+            setActiveIds((prev) => [...prev, entry.target.id]);
+          } else {
+            setActiveIds((prev) => prev.filter((id) => id !== entry.target.id));
           }
         });
-
-        if (visibleIds.length > 0) {
-          setActiveIds(visibleIds);
-        }
       },
-      { rootMargin: '0px 0px -10% 0px', threshold: 0.5 }
+      { rootMargin: '-64px 0px' }
     );
 
     const elements = document.querySelectorAll(selector);
