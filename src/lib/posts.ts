@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
-import path from 'path';
 import matter from 'gray-matter';
+import path from 'path';
+
 import { PostData, PostMeta } from '@/types/post';
 
 const postsDirectory = path.join(process.cwd(), 'src/posts');

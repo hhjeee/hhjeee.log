@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+
 import { Heading } from '@/lib/rehypeExtractHeading';
+
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 
 const TableOfContents = ({ headings }: { headings: Heading[] }) => {

@@ -1,11 +1,14 @@
+import { serialize } from 'next-mdx-remote/serialize';
+
+import rehypePrettyCode from 'rehype-pretty-code';
+
+import { getAllPosts, getPostData } from '@/lib/posts';
+import rehypeExtractHeadings, { Heading } from '@/lib/rehypeExtractHeading';
+
 import MDXRenderer from '@/components/postDetail/MDXRenderer';
 import PostHeader from '@/components/postDetail/PostHeader';
 import ScrollStatusBar from '@/components/postDetail/ScrollStatusBar';
 import TableOfContents from '@/components/postDetail/TableOfContents';
-import { getAllPosts, getPostData } from '@/lib/posts';
-import rehypeExtractHeadings, { Heading } from '@/lib/rehypeExtractHeading';
-import { serialize } from 'next-mdx-remote/serialize';
-import rehypePrettyCode from 'rehype-pretty-code';
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();

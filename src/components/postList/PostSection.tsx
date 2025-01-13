@@ -1,8 +1,9 @@
 'use client';
 
+import { PostData } from '@/types/post';
+
 import CategoryBar from './CategoryBar';
 import Post from './Post';
-import { PostData } from '@/types/post';
 
 const PostSection = ({
   posts,

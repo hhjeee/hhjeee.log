@@ -1,9 +1,11 @@
 'use client';
 
+import { Suspense } from 'react';
+
 import { MDXRemote } from 'next-mdx-remote';
 import { MDXRemoteSerializeResult } from 'next-mdx-remote';
-import { Suspense } from 'react';
-import LoadingSpinner from '../LoadingSpinner';
+
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const MDXRenderer = ({ content }: { content: MDXRemoteSerializeResult }) => {
   return (

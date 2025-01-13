@@ -1,6 +1,6 @@
-import { visit } from 'unist-util-visit';
 import { Root } from 'hast';
 import { Element } from 'hast';
+import { visit } from 'unist-util-visit';
 
 export interface Heading {
   id: number;

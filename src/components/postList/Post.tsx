@@ -1,7 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { PostData } from '@/types/post';
+
 import dayjs from 'dayjs';
+
+import { PostData } from '@/types/post';
 
 const Post = ({ posts }: { posts: PostData[] }) => {
   return (

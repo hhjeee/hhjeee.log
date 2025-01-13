@@ -2,8 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 
-import { PostMeta } from '@/types/post';
 import dayjs from 'dayjs';
+
+import { PostMeta } from '@/types/post';
 
 const PostHeader = ({
   meta,
