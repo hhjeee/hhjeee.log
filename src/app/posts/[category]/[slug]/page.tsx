@@ -5,6 +5,7 @@ import TableOfContents from '@/components/postDetail/TableOfContents';
 import { getAllPosts, getPostData } from '@/lib/posts';
 import rehypeExtractHeadings, { Heading } from '@/lib/rehypeExtractHeading';
 import { serialize } from 'next-mdx-remote/serialize';
+import rehypePrettyCode from 'rehype-pretty-code';
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
@@ -22,9 +23,16 @@ const PostPage = async ({ params }: { params: postPageProps }) => {
   const { meta, content } = await getPostData(category, slug);
 
   const headings: Heading[] = [];
+  const prettyCodeOptions = {
+    theme: 'one-light',
+  };
+
   const mdxContent = await serialize(content, {
     mdxOptions: {
-      rehypePlugins: [[rehypeExtractHeadings, headings]],
+      rehypePlugins: [
+        [rehypeExtractHeadings, headings],
+        [rehypePrettyCode, prettyCodeOptions],
+      ],
     },
   });
 

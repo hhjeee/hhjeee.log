@@ -17,6 +17,8 @@
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "rehype": "^13.0.2",
+    "rehype-pretty-code": "^0.14.0",
+    "shiki": "^1.26.1",
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
