@@ -15,13 +15,15 @@ const Post = ({ posts }: { posts: PostData[] }) => {
             className="break-inside-avoid mb-[1rem] p-[1rem] border no-underline block rounded-lg shadow-sm flex flex-col gap-[0.5rem] hover:shadow-lg transition-shadow duration-300 ease-linear"
           >
             {post.image && (
-              <div className="relative w-full min-h-[10rem] max-h-[25rem] mb-[0.5rem] rounded-md overflow-hidden">
+              <div className="relative w-full min-h-[10rem] mb-[0.5rem] rounded-md overflow-hidden">
                 <Image
                   src={post.image}
                   alt={post.title}
                   width={500}
                   height={500}
+                  sizes="100vw"
                   className="object-cover"
+                  // placeholder="blur"
                 />
               </div>
             )}
