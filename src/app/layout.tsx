@@ -24,9 +24,7 @@ export default function RootLayout({
     <html lang="en" className="h-full bg-white">
       <body className={`${pretendard.className} h-full`}>
         <Header />
-        <div className="pt-[4rem] h-full scrollbar overflow-y-scroll">
-          {children}
-        </div>
+        <div className="pt-[4rem] h-full">{children}</div>
       </body>
     </html>
   );

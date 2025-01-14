@@ -1,6 +1,5 @@
 import typography from '@tailwindcss/typography';
 import type { Config } from 'tailwindcss';
-import plugin from 'tailwindcss/plugin';
 
 export default {
   content: [
@@ -29,31 +28,5 @@ export default {
     },
   },
 
-  plugins: [
-    typography,
-    plugin(function ({ addUtilities }) {
-      addUtilities({
-        '.scrollbar::-webkit-scrollbar': {
-          width: '12px',
-        },
-        '.scrollbar::-webkit-scrollbar-track': {
-          borderRadius: '100vh',
-        },
-        '.scrollbar::-webkit-scrollbar-thumb': {
-          backgroundColor: '#A0D468',
-          borderRadius: '100vh',
-          cursor: 'pointer',
-          backgroundClip: 'padding-box',
-          border: '3px solid transparent',
-        },
-        '.scrollbar::-webkit-scrollbar-thumb:hover': {
-          backgroundColor: '#79BE2D',
-        },
-        '.no-scrollbar': {
-          '-ms-overflow-style': 'none',
-          'scrollbar-width': 'none',
-        },
-      });
-    }),
-  ],
+  plugins: [typography],
 } satisfies Config;
