@@ -10,6 +10,9 @@ import type { MDXComponents } from 'mdx/types';
 
 import LoadingSpinner from '@/components/LoadingSpinner';
 
+import ErrorBox from '../ErrorBox';
+import HighlightBox from '../HighlightBox';
+
 const ImageComponent: MDXComponents = {
   img: ({ src, alt, width = 500, height = 300, ...props }) => {
     return (
@@ -26,10 +29,16 @@ const ImageComponent: MDXComponents = {
   },
 };
 
+const CustomComponents: MDXComponents = {
+  ImageComponent,
+  Error: ErrorBox,
+  Highlight: HighlightBox,
+};
+
 const MDXRenderer = ({ content }: { content: MDXRemoteSerializeResult }) => {
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <MDXRemote {...content} components={ImageComponent} />
+      <MDXRemote {...content} components={CustomComponents} />
     </Suspense>
   );
 };
