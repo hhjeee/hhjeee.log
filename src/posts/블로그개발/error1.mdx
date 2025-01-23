@@ -1,7 +1,7 @@
 ---
 title: 'Next.js15의 dynamic API 비동기화'
 date: 2024-12-24
-desc: 나만의 블로그 제작기 - 카테고리 기능
+desc: next.js15의 업데이트와 이와 관련한 문제 그리고 해결방법
 ---
 
 ## 문제상황
@@ -17,93 +17,45 @@ const PostPage = async ({
   const { meta, content } = getPostData(params.category, params.slug);
 ```
 
-⚠️ page.tsx:11 Server Error: Route "/posts/[category]/[slug]" used params.category. params should be awaited before using its properties. <br/>
-⚠️ page.tsx:11 Server Error: Route "/posts/[category]/[slug]" used params.slug. params should be awaited before using its properties.
+<Error>
+  Server Error: Route "/posts/[category]/[slug]" used params.category. params
+  should be awaited before using its properties. <br />
+  Server Error: Route "/posts/[category]/[slug]" used params.slug. params should
+  be awaited before using its properties.
+</Error>
 
 ## Next.js 15에서의 변화
 
-https://nextjs.org/docs/app/building-your-application/upgrading/version-15
+[next.js15에서 업그레이드된 사항들 중 Async Request API 파트](https://nextjs.org/docs/app/building-your-application/upgrading/version-15#async-request-apis-breaking-change)를 살펴보자.
 
-next.js15에서 업그레이드된 사항들을 살펴보자.
+<Highlight>
+### Async Request APIs (Breaking change)
 
-> ## Async Request APIs (Breaking change)
->
-> Previously synchronous Dynamic APIs that rely on runtime information are now asynchronous:
+Previously synchronous Dynamic APIs that rely on runtime information are now asynchronous:
 
-> - cookies
-> - headers
-> - draftMode
-> - params in layout.js, page.js, route.js, default.js, opengraph-image, twitter-image, icon, and apple-icon.
-> - searchParams in page.js
+- cookies
+- headers
+- draftMode
+- params in layout.js, page.js, route.js, default.js, opengraph-image, twitter-image, icon, and apple-icon.
+- searchParams in page.js
 
-> To ease the burden of migration, a codemod is available to automate the process and the APIs can temporarily be accessed synchronously.
+To ease the burden of migration, a codemod is available to automate the process and the APIs can temporarily be accessed synchronously.
 
-Dynamic API가 비동기적으로 변경되었다.
-params의 경우도 이 dynamic API에 포함되며, 원래 코드에서 동기적으로 사용하고 있었기 때문에 오류가 발생했던 것 !
+</Highlight>
 
-위 공식문서 페이지에서 page.js의 params를 비동기적으로 사용하는 예제에 대해 보여주고 있다.
-
-```
-// Before
-type Params = { slug: string }
-type SearchParams = { [key: string]: string | string[] | undefined }
-
-export function generateMetadata({
-  params,
-  searchParams,
-}: {
-  params: Params
-  searchParams: SearchParams
-}) {
-  const { slug } = params
-  const { query } = searchParams
-}
-
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: Params
-  searchParams: SearchParams
-}) {
-  const { slug } = params
-  const { query } = searchParams
-}
-
-// After
-type Params = Promise<{ slug: string }>
-type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
-
-export async function generateMetadata(props: {
-  params: Params
-  searchParams: SearchParams
-}) {
-  const params = await props.params
-  const searchParams = await props.searchParams
-  const slug = params.slug
-  const query = searchParams.query
-}
-
-export default async function Page(props: {
-  params: Params
-  searchParams: SearchParams
-}) {
-  const params = await props.params
-  const searchParams = await props.searchParams
-  const slug = params.slug
-  const query = searchParams.query
-}
-```
+Next.js 15에서는 동기적으로 처리되던 Dynamic API가 비동기적으로 변경되었다. params의 경우도 이 dynamic API에 포함되며, 코드에서 동기적으로 사용하고 있었기 때문에 오류가 발생했던 것 !
 
 ## 해결
 
-https://nextjs.org/docs/messages/sync-dynamic-apis#possible-ways-to-fix-it
+[공식문서에서 제공하는 해결방안](https://nextjs.org/docs/messages/sync-dynamic-apis)을 살펴보자.
 
-Next.js는 서버 컴포넌트에서 **`params`를 비동기적으로 처리해야 한다고 경고**하고 있다.
+### 비동기로 변경
+
+Next.js는 서버 컴포넌트에서 **params를 비동기적으로 처리해야 한다고 경고**하고 있다. 이를 해결하려면, params를 await를 사용해 비동기적으로 접근해야 한다.
 
 구조 분해 할당에서 await를 사용해 비동기적 접근하는 방식으로 변경하는 방식으로 해결 !
 
-```tsx
+```ts
 const PostPage = async ({
   params,
 }: {
@@ -113,6 +65,21 @@ const PostPage = async ({
   const { meta, content } = getPostData(category, slug);
 ```
 
-만약 **클라이언트 컴포넌트에서 경고가 발생한 경우**
+### 클라이언트 컴포넌트라면
 
-클라이언트 컴포넌트에서는 React의 `React.use()`를 사용하여 Promise 값 처리
+만약 클라이언트 컴포넌트에서 동일한 경고가 발생한 경우, React.use()를 사용하여 Promise 값 처리할 수 있다.
+
+```ts
+'use client';
+
+import { use } from 'react';
+
+const PostPage = ({
+  params,
+}: {
+  params: Promise<{ category: string; slug: string }>;
+}) => {
+  const { category, slug } = use(params); // React.use() 사용
+  const { meta, content } = getPostData(category, slug);
+};
+```

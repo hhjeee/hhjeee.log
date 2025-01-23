@@ -7,7 +7,6 @@ const Header = () => {
       <Link href="/">
         <div className="text-xl font-semibold text-gradient">hhjeee.log</div>
       </Link>
-      {/* <div>dark</div> TODO 다크모드 기능 추가 */}
       <Link href="https://github.com/hhjeee">
         <Image
           src="/icons/github.svg"
