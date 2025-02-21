@@ -2,27 +2,178 @@
 title: 'mdx파일 파싱하기'
 date: 2024-12-05
 desc: 나만의 블로그 제작기 - 게시물 파싱하기
-image: '/images/tmp2.jpg'
 ---
 
-# 제목1
+```mdx title="src/posts/blog/setup.tsx
+---
+title: '임시게시글'
+date: 2024-12-05
+desc: 임시게시글입니다아아아아아ㅏ
+---
 
-ㅇㅇ
+### 제목
 
-## 제목2
+이 글은 임시게시글 입니다.
+```
 
-ㅇㅇ
+gray-matter를 통해 mdx 파일을 파싱한다.
 
-### 제목3
+```shell
+yarn add --save gray-matter
+```
 
-ㅇㅇ
+getPostData 함수를 작성
 
-## 제목22
+```ts title="src/lib/posts.ts"
+import fs from 'fs';
+import matter from 'gray-matter';
+import path from 'path';
 
-ㅇㅇ
+const postsDirectory = path.join(process.cwd(), 'src/posts/blog');
 
-### 제목32
+export function getPostData(filename: string) {
+  const filePath = path.join(postsDirectory, `${filename}.mdx`);
+  const fileContents = fs.readFileSync(filePath, 'utf8');
 
-ㅇㅇ
+  // gray-matter로 메타데이터와 본문(content)을 파싱
+  const { data, content } = matter(fileContents);
 
-# 제목1
+  return {
+    meta: data, // 메타데이터 (title, date 등)
+    content, // MDX 본문
+  };
+}
+```
+
+우선 파싱이 잘 되었나만 확인해보자.
+
+```tsx title="src/app/pages.tsx"
+import { getPostData } from '../lib/posts';
+
+const MainPage = () => {
+  const { meta, content } = getPostData('setup');
+
+  return (
+    <div>
+      <div className="prose mx-auto p-4">
+        <h1>{meta.title}</h1>
+        <p>{meta.date}</p>
+        <div>{content}</div>
+      </div>
+    </div>
+  );
+};
+
+export default MainPage;
+```
+
+setup이라는 파일 하나만 파싱한다고 가정하고, 이를 메인페이지에서 띄워 확인해보려 했더니 다음과 같은 에러가 발생했다.
+
+<Error>
+  Error: Objects are not valid as a React child (found: [object Date]). If you
+  meant to render a collection of children, use an array instead.
+</Error>
+
+React에서 렌더링하려는 값이 Date 객체인 경우 발생하는 것으로 Date 객체를 직접 렌더링 할 수 없으므로, 문자열로 변환해야 한다.
+위의 `<p>{meta.date}</p>`를 `<p>{new Date(meta.date).toLocaleDateString()}</p>` 로 수정하였다.
+
+이제 보이기는 하는데.. 앞에 #을 붙여 표현한 마크다운 문법이 적용되지 않고 #이 그대로 표시되는 문제가 발생했다.
+
+사아아아 진
+
+마크다운 형식으로 지정된 content를 HTML 요소로 변환해 주어야 한다.
+
+next-mdx-remote 설치
+
+```shell
+yarn add next-mdx-remote
+```
+
+아래와 같이 src/page.tsx의 코드를 수정했다.
+
+```tsx title="src/page.tsx
+import { MDXRemote } from 'next-mdx-remote';
+import { serialize } from 'next-mdx-remote/serialize';
+
+import { getPostData } from '@/lib/posts';
+
+const MainPage = async () => {
+  const { meta, content } = getPostData('setup');
+  const mdxSource = await serialize(content);
+
+  return (
+    <div>
+      <h1>{meta.title}</h1>
+      <p>{new Date(meta.date).toLocaleDateString()}</p>
+      <MDXRemote {...mdxSource} />
+    </div>
+  );
+};
+
+export default MainPage;
+```
+
+또 오류가 발생했는데
+
+next-mdx-remote는 클라이언트 전용 라이브러리로, 서버 컴포넌트에서는 사용할 수 없다는 내용의 오류였다.
+클라이언트 컴포넌트로 옮기고, 서버 컴포넌트에서 데이터를 전달하는 방식으로 수정한다.
+
+```tsx title="src/components/MDXRenderer.tsx"
+'use client';
+
+import { MDXRemote } from 'next-mdx-remote';
+import { MDXRemoteSerializeResult } from 'next-mdx-remote';
+
+const MDXRenderer = ({ content }: { content: MDXRemoteSerializeResult }) => {
+  return <MDXRemote {...content} />;
+};
+
+export default MDXRenderer;
+```
+
+```tsx title="src/app/page.tsx"
+import { serialize } from 'next-mdx-remote/serialize';
+
+import { getPostData } from '@/lib/posts';
+
+import MDXRenderer from '@/components/MDXRenderer';
+
+const MainPage = async () => {
+  const { meta, content } = getPostData('setup');
+  const mdxContent = await serialize(content);
+
+  return (
+    <div>
+      <h1>{meta.title}</h1>
+      <p>{new Date(meta.date).toLocaleDateString()}</p>
+      <MDXRenderer content={mdxContent} />
+    </div>
+  );
+};
+
+export default MainPage;
+```
+
+이렇게 하니 해결됐다.
+
+또 다른 문제가 있었는데 아래 사진에서 \*로 강조한 강조강조 문구는 굵게 보이는데, ###로 강조한 제목은 크게 안보이고 보통 글씨와 같게 보인다.
+
+1. @tailwindcss/typography 플러그인 설치
+
+```shell
+yarn add @tailwindcss/typography
+```
+
+2. tailwind.config.ts 수정
+
+```ts
+import typography from '@tailwindcss/typography';
+export default {
+    ~
+    plugins: [typography],
+}
+```
+
+3. markdown 보여주는 부분의 className에 prose 클래스 추가
+
+성공 !

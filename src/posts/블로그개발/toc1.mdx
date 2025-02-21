@@ -9,9 +9,9 @@ desc: 나만의 블로그 제작기 - TOC 구현해보기
 **lib/rehypeExtractingHeadings.ts 전체코드**
 
 ```tsx
-import { visit } from 'unist-util-visit';
 import { Root } from 'hast';
 import { Element } from 'hast';
+import { visit } from 'unist-util-visit';
 
 export interface Heading {
   id: number;
@@ -62,8 +62,6 @@ export default function rehypeExtractHeadings(headings: Heading[]) {
 ```
 
 인수인 headings 배열에 추출된 헤더 데이터 저장
-
-![스크린샷 2024-12-27 오후 2.31.00.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/8c2b05e0-6f37-4b0b-9a8a-b987cb973c40/0c419d31-3adb-486d-81e7-fe19a745cbe4/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-12-27_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_2.31.00.png)
 
 tree를 출력하면 다음과 같이 출력됨
 
