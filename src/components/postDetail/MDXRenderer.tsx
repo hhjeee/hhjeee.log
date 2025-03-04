@@ -10,8 +10,8 @@ import type { MDXComponents } from 'mdx/types';
 
 import LoadingSpinner from '@/components/LoadingSpinner';
 
-import ErrorBox from '../ErrorBox';
-import HighlightBox from '../HighlightBox';
+import ErrorBox from './contentBox/ErrorBox';
+import HighlightBox from './contentBox/HighlightBox';
 
 const ImageComponent: MDXComponents = {
   img: ({ src, alt, width = 500, height = 300, ...props }) => {
