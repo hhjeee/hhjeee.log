@@ -24,10 +24,10 @@ const CategoryBar = ({
   };
 
   return (
-    <div className="fixed bg-[#FFF] z-10 pt-[1rem] mb-[1rem] left-1/2 transform -translate-x-1/2 w-[65%] flex space-x-4 border-b-2 border-gray1">
+    <div className="fixed bg-[#FFF] z-10 pt-2 left-1/2 transform -translate-x-1/2 w-[65%] flex space-x-2 border-b-2 border-gray1">
       <button
         onClick={() => handleCategoryClick(null)}
-        className={`py-2 px-4 ${
+        className={`py-2 px-4 text-sm ${
           !selectedCategory
             ? 'text-white font-medium bg-primary rounded-t-md'
             : 'text-gray2'
@@ -39,7 +39,7 @@ const CategoryBar = ({
         <button
           key={category}
           onClick={() => handleCategoryClick(category)}
-          className={`py-2 px-4 ${
+          className={`py-2 px-4 text-sm ${
             selectedCategory === category
               ? 'text-white font-medium bg-primary rounded-t-md'
               : 'text-gray2'

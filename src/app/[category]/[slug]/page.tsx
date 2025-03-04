@@ -43,7 +43,7 @@ const PostPage = async ({ params }: { params: postPageProps }) => {
     <div className="relative py-[2rem] prose mx-auto">
       <ScrollStatusBar />
       <PostHeader meta={meta} category={category} />
-      <TableOfContents headings={headings} /> d
+      <TableOfContents headings={headings} />
       <MDXRenderer content={mdxContent} />
     </div>
   );
