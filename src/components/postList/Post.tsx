@@ -7,12 +7,12 @@ import { PostData } from '@/types/post';
 
 const Post = ({ posts }: { posts: PostData[] }) => {
   return (
-    <div className="mt-[5rem] columns-1 sm:columns-2 gap-4">
+    <div className="mt-[5rem] columns-1 sm:columns-2">
       {posts.map((post) => (
         <div key={post.slug}>
           <Link
             href={`/${post.category}/${post.slug}`}
-            className="break-inside-avoid mb-[1rem] p-[1rem] border no-underline block rounded-lg shadow-sm flex flex-col gap-[0.5rem] hover:shadow-lg transition-shadow duration-300 ease-linear"
+            className="relative group hover:bg-primary hover:bg-opacity-10 duration-200 ease-linear break-inside-avoid py-6 px-4 no-underline block flex flex-col" //hover:shadow-lg transition-shadow duration-300 ease-linear
           >
             {post.image && (
               <div className="relative w-full min-h-[10rem] mb-[0.5rem] rounded-md overflow-hidden">
@@ -27,12 +27,19 @@ const Post = ({ posts }: { posts: PostData[] }) => {
                 />
               </div>
             )}
-            <h3 className="font-semibold text-xl">{post.title}</h3>
-            <p className="text-gray2">{post.desc}</p>
-            <p className="font-medium m-0 text-sm no-underline text-gray2">
-              {dayjs(post.date).format('YYYY년 MM월 DD일')}
-            </p>
+
+            <h3 className="font-semibold text-xl group-hover:text-primary2 duration-100 ease-linear">
+              {post.title}
+            </h3>
+            <p className="text-gray2 text-sm mt-2 mb-1">{post.desc}</p>
+            <div className="flex gap-2 items-center">
+              <p className="text-sm text-gray2">
+                {dayjs(post.date).format('YYYY년 MM월 DD일')} ·{' '}
+                {decodeURIComponent(post.category)}
+              </p>
+            </div>
           </Link>
+          <hr />
         </div>
       ))}
     </div>
