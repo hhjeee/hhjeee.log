@@ -29,19 +29,19 @@ const CategoryBar = ({
         onClick={() => handleCategoryClick(null)}
         className={`py-2 px-4 ${
           !selectedCategory
-            ? 'text-gray3 font-semibold border-b-2 border-gray3'
+            ? 'text-white font-medium bg-primary rounded-t-md'
             : 'text-gray2'
         }`}
       >
-        <span className="hover:font-semibold">전체 ({totalPostsCount})</span>
+        <span>전체 ({totalPostsCount})</span>
       </button>
       {Object.entries(categoriesWithCount).map(([category, count]) => (
         <button
           key={category}
           onClick={() => handleCategoryClick(category)}
-          className={`py-2 px-4 hover:font-semibold ${
+          className={`py-2 px-4 ${
             selectedCategory === category
-              ? 'text-gray3 font-semibold border-b-2 border-gray3'
+              ? 'text-white font-medium bg-primary rounded-t-md'
               : 'text-gray2'
           }`}
         >
