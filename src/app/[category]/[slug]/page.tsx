@@ -7,7 +7,7 @@ import {
   getAllPosts,
   getCategories,
   getPostData,
-  getPostsByCategory,
+  getPostNamesByCategory,
 } from '@/lib/posts';
 import rehypeExtractHeadings, { Heading } from '@/lib/rehypeExtractHeading';
 
@@ -52,7 +52,7 @@ const PostPage = async ({ params }: { params: postPageProps }) => {
     notFound();
   }
 
-  const postsByCategory = await getPostsByCategory(decodedCategory);
+  const postsByCategory = await getPostNamesByCategory(decodedCategory);
   if (!postsByCategory.includes(decodeURIComponent(slug))) {
     notFound();
   }
