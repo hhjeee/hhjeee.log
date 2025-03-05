@@ -116,9 +116,9 @@ export async function getSiteMapPostList() {
   const baseUrl = 'https://hhjeee-log.vercel.app';
 
   const sitemapPostList = postList.map(({ slug, category, date }) => ({
-    lastModified: new Date(date).toISOString(),
     url: `${baseUrl}/${category}/${slug}`,
+    lastModified: new Date(date).toISOString(),
   }));
-
+  console.log(sitemapPostList);
   return sitemapPostList;
 }
