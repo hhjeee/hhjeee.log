@@ -30,7 +30,7 @@ export async function generateMetadata({
 }: {
   params: { category: string; slug: string };
 }) {
-  const { category, slug } = await params;
+  const { category, slug } = params;
   const { meta } = await getPostData(category, slug);
 
   const metadata = {
