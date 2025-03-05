@@ -53,6 +53,51 @@ export async function getPostData(
   };
 }
 
+export async function getCategories() {
+  const categories = await fs.readdir(postsDirectory);
+  return categories;
+}
+export async function getPostsByCategory(category: string): Promise<string[]> {
+  const categoryPath = path.join(postsDirectory, category);
+  const fileNames = await fs.readdir(categoryPath);
+
+  const titles = await Promise.all(
+    fileNames.map(async (fileName) => {
+      const slug = fileName.replace(/\.mdx$/, '');
+      const filePath = path.join(categoryPath, fileName);
+      const fileContents = await fs.readFile(filePath, 'utf8');
+      const { data } = matter(fileContents);
+
+      return data.title as string;
+    })
+  );
+
+  return titles;
+}
+// export async function getPostsByCategory(
+//   category: string
+// ): Promise<PostData[]> {
+//   const categoryPath = path.join(postsDirectory, category);
+//   const fileNames = await fs.readdir(categoryPath);
+
+//   const posts = await Promise.all(
+//     fileNames.map(async (fileName) => {
+//       const slug = fileName.replace(/\.mdx$/, '');
+//       const filePath = path.join(categoryPath, fileName);
+//       const fileContents = await fs.readFile(filePath, 'utf8');
+//       const { data } = matter(fileContents);
+
+//       return {
+//         slug,
+//         category,
+//         ...data,
+//       } as PostData;
+//     })
+//   );
+
+//   return posts;
+// }
+
 export async function getSiteMapPostList() {
   const postList = await getAllPosts();
   const baseUrl = 'https://hhjeee-log.vercel.app';

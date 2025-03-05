@@ -1,8 +1,14 @@
 import { serialize } from 'next-mdx-remote/serialize';
+import { notFound } from 'next/navigation';
 
 import rehypePrettyCode from 'rehype-pretty-code';
 
-import { getAllPosts, getPostData } from '@/lib/posts';
+import {
+  getAllPosts,
+  getCategories,
+  getPostData,
+  getPostsByCategory,
+} from '@/lib/posts';
 import rehypeExtractHeadings, { Heading } from '@/lib/rehypeExtractHeading';
 
 import MDXRenderer from '@/components/postDetail/MDXRenderer';
@@ -24,7 +30,7 @@ export async function generateMetadata({
 }: {
   params: { category: string; slug: string };
 }) {
-  const { category, slug } = params;
+  const { category, slug } = await params;
   const { meta } = await getPostData(category, slug);
 
   const metadata = {
@@ -39,6 +45,18 @@ type postPageProps = Promise<{ category: string; slug: string }>;
 
 const PostPage = async ({ params }: { params: postPageProps }) => {
   const { category, slug } = await params;
+  const decodedCategory = decodeURIComponent(category);
+
+  const categories = await getCategories();
+  if (!categories.includes(decodedCategory)) {
+    notFound();
+  }
+
+  const postsByCategory = await getPostsByCategory(decodedCategory);
+  if (!postsByCategory.includes(decodeURIComponent(slug))) {
+    notFound();
+  }
+
   const { meta, content } = await getPostData(category, slug);
 
   const headings: Heading[] = [];

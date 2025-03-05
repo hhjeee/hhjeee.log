@@ -1,13 +1,13 @@
+import { notFound } from 'next/navigation';
+
 import { PostData } from '@/types/post';
 
-import { getAllPosts } from '@/lib/posts';
+import { getAllPosts, getCategories } from '@/lib/posts';
 
 import PostSection from '@/components/postList/PostSection';
 
 export async function generateStaticParams() {
-  const posts = await getAllPosts();
-
-  const categories = Array.from(new Set(posts.map((post) => post.category)));
+  const categories = await getCategories();
 
   return categories.map((category) => ({
     category,
@@ -18,10 +18,16 @@ type categoryPageProps = Promise<{ category: string }>;
 
 const CategoryPage = async ({ params }: { params: categoryPageProps }) => {
   const { category } = await params;
+  const decodedCategory = decodeURIComponent(category);
+
+  const categories = await getCategories();
+  if (!categories.includes(decodedCategory)) {
+    notFound();
+  }
 
   const posts: PostData[] = await getAllPosts();
-  const decodedCategory = decodeURIComponent(category);
 
   return <PostSection posts={posts} selectedCategory={decodedCategory} />;
 };
+
 export default CategoryPage;
