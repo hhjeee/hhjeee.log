@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 
 import { PostData } from '@/types/post';
 
-import { getAllPosts, getCategories } from '@/lib/posts';
+import { getCategories, getPostsByCategory } from '@/lib/posts';
 
 import PostSection from '@/components/postList/PostSection';
 
@@ -25,9 +25,15 @@ const CategoryPage = async ({ params }: { params: categoryPageProps }) => {
     notFound();
   }
 
-  const posts: PostData[] = await getAllPosts();
+  const posts: PostData[] = await getPostsByCategory(decodedCategory);
 
-  return <PostSection posts={posts} selectedCategory={decodedCategory} />;
+  return (
+    <PostSection
+      posts={posts}
+      categories={categories}
+      selectedCategory={decodedCategory}
+    />
+  );
 };
 
 export default CategoryPage;

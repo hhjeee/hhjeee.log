@@ -4,8 +4,8 @@ import { notFound } from 'next/navigation';
 import rehypePrettyCode from 'rehype-pretty-code';
 
 import {
-  getAllPosts,
   getCategories,
+  getCategoriesWithSlugs,
   getPostData,
   getPostNamesByCategory,
 } from '@/lib/posts';
@@ -17,11 +17,11 @@ import ScrollStatusBar from '@/components/postDetail/ScrollStatusBar';
 import TableOfContents from '@/components/postDetail/TableOfContents';
 
 export async function generateStaticParams() {
-  const posts = await getAllPosts();
+  const categorySlugs = await getCategoriesWithSlugs();
 
-  return posts.map((post) => ({
-    category: post.category,
-    slug: post.slug,
+  return categorySlugs.map((item) => ({
+    category: item.category,
+    slug: item.slug,
   }));
 }
 

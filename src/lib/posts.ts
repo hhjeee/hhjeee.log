@@ -63,31 +63,53 @@ export async function getPostNamesByCategory(
   const categoryPath = path.join(postsDirectory, category);
   const fileNames = await fs.readdir(categoryPath);
 
-  return fileNames.map((file) => file.replace('.mdx', ''));
+  return fileNames.map((file) => file.replace(/\.mdx$/, ''));
 }
-// export async function getPostsByCategory(
-//   category: string
-// ): Promise<PostData[]> {
-//   const categoryPath = path.join(postsDirectory, category);
-//   const fileNames = await fs.readdir(categoryPath);
+export async function getPostsByCategory(
+  category: string
+): Promise<PostData[]> {
+  const categoryPath = path.join(postsDirectory, category);
+  const fileNames = await fs.readdir(categoryPath);
 
-//   const posts = await Promise.all(
-//     fileNames.map(async (fileName) => {
-//       const slug = fileName.replace(/\.mdx$/, '');
-//       const filePath = path.join(categoryPath, fileName);
-//       const fileContents = await fs.readFile(filePath, 'utf8');
-//       const { data } = matter(fileContents);
+  const posts = await Promise.all(
+    fileNames.map(async (fileName) => {
+      const slug = fileName.replace(/\.mdx$/, '');
+      const filePath = path.join(categoryPath, fileName);
+      const fileContents = await fs.readFile(filePath, 'utf8');
+      const { data } = matter(fileContents);
 
-//       return {
-//         slug,
-//         category,
-//         ...data,
-//       } as PostData;
-//     })
-//   );
+      return {
+        slug,
+        category,
+        ...data,
+      } as PostData;
+    })
+  );
 
-//   return posts;
-// }
+  return posts;
+}
+
+export async function getCategoriesWithSlugs(): Promise<
+  { category: string; slug: string }[]
+> {
+  const categories = await fs.readdir(postsDirectory);
+
+  const categorySlugPairs = (
+    await Promise.all(
+      categories.map(async (category) => {
+        const categoryPath = path.join(postsDirectory, category);
+        const fileNames = await fs.readdir(categoryPath);
+
+        return fileNames.map((fileName) => ({
+          category,
+          slug: fileName.replace(/\.mdx$/, ''),
+        }));
+      })
+    )
+  ).flat();
+
+  return categorySlugPairs;
+}
 
 export async function getSiteMapPostList() {
   const postList = await getAllPosts();

@@ -2,17 +2,13 @@
 
 import { useRouter } from 'next/navigation';
 
-interface CategoryBarProps {
-  categoriesWithCount: Record<string, number>;
-  totalPostsCount: number;
-  selectedCategory: string | null;
-}
-
 const CategoryBar = ({
-  categoriesWithCount,
-  totalPostsCount,
+  categories,
   selectedCategory,
-}: CategoryBarProps) => {
+}: {
+  categories: string[];
+  selectedCategory: string | null;
+}) => {
   const router = useRouter();
 
   const handleCategoryClick = (category: string | null) => {
@@ -33,9 +29,9 @@ const CategoryBar = ({
             : 'text-gray2'
         }`}
       >
-        <span>전체 ({totalPostsCount})</span>
+        <span>전체 </span>
       </button>
-      {Object.entries(categoriesWithCount).map(([category, count]) => (
+      {categories.map((category) => (
         <button
           key={category}
           onClick={() => handleCategoryClick(category)}
@@ -45,7 +41,7 @@ const CategoryBar = ({
               : 'text-gray2'
           }`}
         >
-          {category} ({count})
+          {category}
         </button>
       ))}
     </div>
