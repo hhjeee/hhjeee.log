@@ -19,6 +19,22 @@ export async function generateStaticParams() {
   }));
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { category: string; slug: string };
+}) {
+  const { category, slug } = params;
+  const { meta } = await getPostData(category, slug);
+
+  const metadata = {
+    title: meta.title,
+    description: meta.desc,
+  };
+
+  return metadata;
+}
+
 type postPageProps = Promise<{ category: string; slug: string }>;
 
 const PostPage = async ({ params }: { params: postPageProps }) => {
