@@ -9,7 +9,7 @@ desc: next.js15의 업데이트와 이와 관련한 문제 그리고 해결방�
 아래와 같이 params의 요소들을 받아와 함수로 넘겨주고 있었는데 경고가 발생했다.
 
 ```tsx
-const PostPage = async ({
+const PostPage = ({
   params,
 }: {
   params: { category: string; slug: string };

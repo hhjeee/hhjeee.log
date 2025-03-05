@@ -52,3 +52,15 @@ export async function getPostData(
     content,
   };
 }
+
+export async function getSiteMapPostList() {
+  const postList = await getAllPosts();
+  const baseUrl = 'https://hhjeee-log.vercel.app';
+
+  const sitemapPostList = postList.map(({ slug, category, date }) => ({
+    lastModified: new Date(date).toISOString(),
+    url: `${baseUrl}/${category}/${slug}`,
+  }));
+
+  return sitemapPostList;
+}
