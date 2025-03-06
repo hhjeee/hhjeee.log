@@ -24,6 +24,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full bg-white">
+      <head>
+        <meta
+          name="google-site-verification"
+          content="hsL8GKHSSQrMl1zvTwQOxnMMrMbD_qwBYZCB-UVNKc0"
+        />
+      </head>
       <body className={`${pretendard.className} h-full`}>
         <Header />
         <div className="pt-[4rem] h-full">{children}</div>
