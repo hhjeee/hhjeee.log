@@ -1,24 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-
 import { Heading } from '@/lib/rehypeExtractHeading';
 
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
+import useMediaQuery from '@/hooks/useMediaQuery';
 
 const TableOfContents = ({ headings }: { headings: Heading[] }) => {
   const activeIds = useIntersectionObserver('h1, h2, h3');
-  const [isBelowLg, setIsBelowLg] = useState(false);
-
-  useEffect(() => {
-    const updateIsBelowLg = () => {
-      setIsBelowLg(window.innerWidth < 1024); // lg breakpoint 기준
-    };
-
-    updateIsBelowLg();
-    window.addEventListener('resize', updateIsBelowLg);
-    return () => window.removeEventListener('resize', updateIsBelowLg);
-  }, []);
+  const isBelowLg = useMediaQuery(1024);
 
   const handleClick = (id: number) => {
     const element = document.getElementById(id.toString());

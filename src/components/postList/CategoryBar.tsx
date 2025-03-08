@@ -2,6 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 
+import useMediaQuery from '@/hooks/useMediaQuery';
+
+import CustomSelect from '../customUI/CustomSelect';
+import CustomTab from '../customUI/CustomTab';
+
 const CategoryBar = ({
   categories,
   selectedCategory,
@@ -10,40 +15,27 @@ const CategoryBar = ({
   selectedCategory: string | null;
 }) => {
   const router = useRouter();
+  const isBelowSM = useMediaQuery(640);
 
   const handleCategoryClick = (category: string | null) => {
-    if (category === null) {
-      router.push('/');
-    } else {
-      router.push(`/${decodeURIComponent(category)}`);
-    }
+    router.push(category ? `/${decodeURIComponent(category)}` : '/');
   };
 
   return (
-    <div className="fixed bg-[#FFF] z-10 pt-2 left-1/2 transform -translate-x-1/2 w-[65%] flex space-x-2 border-b-2 border-gray1">
-      <button
-        onClick={() => handleCategoryClick(null)}
-        className={`py-2 px-4 text-sm ${
-          !selectedCategory
-            ? 'text-white font-medium bg-primary rounded-t-md'
-            : 'text-gray2'
-        }`}
-      >
-        <span>전체 </span>
-      </button>
-      {categories.map((category) => (
-        <button
-          key={category}
-          onClick={() => handleCategoryClick(category)}
-          className={`py-2 px-4 text-sm ${
-            selectedCategory === category
-              ? 'text-white font-medium bg-primary rounded-t-md'
-              : 'text-gray2'
-          }`}
-        >
-          {category}
-        </button>
-      ))}
+    <div className="fixed z-10 pt-2 left-1/2 transform -translate-x-1/2 w-[80%] bg-white border-b-2 border-gray1">
+      {isBelowSM ? (
+        <CustomSelect
+          options={categories}
+          selectedOption={selectedCategory}
+          onSelect={handleCategoryClick}
+        />
+      ) : (
+        <CustomTab
+          tabs={categories}
+          selectedTab={selectedCategory}
+          onClick={handleCategoryClick}
+        />
+      )}
     </div>
   );
 };
