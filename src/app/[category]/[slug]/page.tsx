@@ -70,7 +70,7 @@ const PostPage = async ({ params }: { params: postPageProps }) => {
   });
 
   return (
-    <div className="relative py-[2rem] prose mx-auto">
+    <div className="relative py-[2rem] prose max-w-[90%] sm:max-w-prose mx-auto">
       <ScrollStatusBar />
       <PostHeader meta={meta} category={category} />
       <TableOfContents headings={headings} />

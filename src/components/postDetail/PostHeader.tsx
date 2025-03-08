@@ -24,7 +24,7 @@ const PostHeader = ({
       <h1>{meta.title}</h1>
       <div className="flex items-center gap-2 font-medium">
         <button
-          className="bg-primary rounded-full px-3 py-0.5 text-white m-0"
+          className="bg-primary rounded-full whitespace-nowrap px-3 py-0.5 text-white m-0"
           onClick={() => handleCategoryClick(category)}
         >
           {decodeURIComponent(category)}
