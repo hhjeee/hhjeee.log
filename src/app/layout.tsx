@@ -32,7 +32,7 @@ export default function RootLayout({
       </head>
       <body className={`${pretendard.className} h-full`}>
         <Header />
-        <div className="pt-[4rem] h-full">{children}</div>
+        <div className="pt-[3.5rem] h-full">{children}</div>
       </body>
     </html>
   );
