@@ -29,6 +29,10 @@ export default function RootLayout({
           name="google-site-verification"
           content="hsL8GKHSSQrMl1zvTwQOxnMMrMbD_qwBYZCB-UVNKc0"
         />
+        <meta
+          name="google-site-verification"
+          content="8syGdrTlNXIdG3KAi4vCLQ5lRzMtvT7aezbbLn7Gn5Y"
+        />
       </head>
       <body className={`${pretendard.className} h-full`}>
         <Header />
