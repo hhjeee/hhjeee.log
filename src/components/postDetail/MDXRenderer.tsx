@@ -10,6 +10,7 @@ import type { MDXComponents } from 'mdx/types';
 
 import LoadingSpinner from '@/components/LoadingSpinner';
 
+import InlineCodeBlock from '../InlineCodeBlock';
 import ErrorBox from './contentBox/ErrorBox';
 import HighlightBox from './contentBox/HighlightBox';
 
@@ -33,6 +34,7 @@ const CustomComponents: MDXComponents = {
   ImageComponent,
   Error: ErrorBox,
   Highlight: HighlightBox,
+  InlineCode: InlineCodeBlock,
 };
 
 const MDXRenderer = ({ content }: { content: MDXRemoteSerializeResult }) => {

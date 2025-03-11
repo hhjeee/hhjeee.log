@@ -52,7 +52,7 @@ const TableOfContents = ({ headings }: { headings: Heading[] }) => {
       <hr className="my-[1rem] h-0.5 bg-gray1" />
     </nav>
   ) : (
-    <nav className="absolute top-0 left-full w-[200px] h-full hidden lg:block">
+    <nav className="absolute top-0 left-full w-[50%] h-full hidden lg:block">
       <div className="sticky ml-6 top-20 overflow-visible">
         {renderHeadings(headings)}
       </div>

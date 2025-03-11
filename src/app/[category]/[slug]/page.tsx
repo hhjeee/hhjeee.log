@@ -29,7 +29,10 @@ type postPageProps = Promise<{ category: string; slug: string }>;
 
 export async function generateMetadata({ params }: { params: postPageProps }) {
   const { category, slug } = await params;
-  const { meta } = await getPostData(category, slug);
+  const { meta } = await getPostData(
+    decodeURIComponent(category),
+    decodeURIComponent(slug)
+  );
 
   const metadata = {
     title: meta.title,
@@ -42,6 +45,7 @@ export async function generateMetadata({ params }: { params: postPageProps }) {
 const PostPage = async ({ params }: { params: postPageProps }) => {
   const { category, slug } = await params;
   const decodedCategory = decodeURIComponent(category);
+  const decodedSlug = decodeURIComponent(slug);
 
   const categories = await getCategories();
   if (!categories.includes(decodedCategory)) {
@@ -49,11 +53,11 @@ const PostPage = async ({ params }: { params: postPageProps }) => {
   }
 
   const postsByCategory = await getPostNamesByCategory(decodedCategory);
-  if (!postsByCategory.includes(decodeURIComponent(slug))) {
+  if (!postsByCategory.includes(decodedSlug)) {
     notFound();
   }
 
-  const { meta, content } = await getPostData(category, slug);
+  const { meta, content } = await getPostData(decodedCategory, decodedSlug);
 
   const headings: Heading[] = [];
   const prettyCodeOptions = {
