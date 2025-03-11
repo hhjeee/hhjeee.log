@@ -113,7 +113,7 @@ export async function getCategoriesWithSlugs(): Promise<
 
 export async function getSiteMapPostList() {
   const postList = await getAllPosts();
-  const baseUrl = 'https://hhjeee-log.vercel.app';
+  const baseUrl = 'https://hhjeee.com';
 
   const sitemapPostList = postList.map(({ slug, category, date }) => ({
     url: `${baseUrl}/${category}/${slug}`,

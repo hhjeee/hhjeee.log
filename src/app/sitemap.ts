@@ -4,7 +4,7 @@ import { getSiteMapPostList } from '@/lib/posts';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const postList = await getSiteMapPostList();
-  const baseUrl = 'https://hhjeee-log.vercel.app';
+  const baseUrl = 'https://hhjeee.com';
 
   return [
     {

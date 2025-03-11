@@ -5,7 +5,7 @@ import Header from '@/components/Header';
 import './globals.css';
 
 export const metadata = {
-  metadataBase: new URL('https://hhjeee-log.vercel.app'),
+  metadataBase: new URL('https://hhjeee.com'),
   title: 'hhjeee.log',
   description:
     '개발을 통해 만난 도전과 배움, 그리고 여정을 기록하며 나만의 성장 이야기를 이어갑니다.',
