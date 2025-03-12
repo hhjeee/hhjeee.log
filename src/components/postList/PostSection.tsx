@@ -2,6 +2,7 @@
 
 import { PostData } from '@/types/post';
 
+import BookPost from './BookPost';
 import CategoryBar from './CategoryBar';
 import Post from './Post';
 
@@ -20,7 +21,11 @@ const PostSection = ({
         categories={categories}
         selectedCategory={selectedCategory || null}
       />
-      <Post posts={posts} />
+      {selectedCategory == 'DeepDive' ? (
+        <BookPost posts={posts} />
+      ) : (
+        <Post posts={posts} />
+      )}
     </div>
   );
 };
