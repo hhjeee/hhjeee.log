@@ -1,4 +1,5 @@
 import typography from '@tailwindcss/typography';
+import scrollbarHide from 'tailwind-scrollbar-hide';
 import type { Config } from 'tailwindcss';
 
 export default {
@@ -28,5 +29,5 @@ export default {
     },
   },
 
-  plugins: [typography],
+  plugins: [typography, scrollbarHide],
 } satisfies Config;
