@@ -3,6 +3,7 @@ export interface PostMeta {
   date: string;
   desc?: string;
   image?: string;
+  cover?: string;
 }
 
 export interface PostData extends PostMeta {

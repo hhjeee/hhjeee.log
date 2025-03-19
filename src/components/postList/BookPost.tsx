@@ -6,35 +6,33 @@ import { PostData } from '@/types/post';
 const BookPost = ({ posts }: { posts: PostData[] }) => {
   return (
     <>
-      <div className="mt-[3rem] flex items-center">
-        <div className="h-96 w-64 mr-2 sm:block hidden">
+      <div className="mt-[4rem] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        <div className="h-96 sm:block hidden">
           <Image
-            src={'/images/posts/DeepDive/modern-js.jpg'}
-            alt={'modern javascript book poster'}
+            src={posts[0].cover!}
+            alt={'book cover'}
             width={500}
             height={500}
             className="h-full w-full object-contain"
             // placeholder="blur"
           />
         </div>
-        <div className="mt-4 flex flex-1 gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
-          {posts.map((post) => (
-            <div key={post.slug}>
-              <Link
-                href={`/${post.category}/${post.slug}`}
-                className="relative group w-64 border shadow rounded-2xl overflow-hidden h-96 p-4 block flex flex-col hover:bg-primary hover:bg-opacity-10 duration-200 ease-linear cursor-pointer"
-              >
-                <p className="absolute -bottom-1/2 overflow-hidden left-0 text-[450px] font-black hover:text-primary2 text-gray2 opacity-10">
-                  {post.title[0]}
-                </p>
-                <h3 className="font-semibold text-2xl group-hover:text-primary2 duration-100 ease-linear">
-                  {post.title}
-                </h3>
-                <p className="text-gray2 text-sm mt-2 mb-1">{post.desc}</p>
-              </Link>
-            </div>
-          ))}
-        </div>
+        {posts.map((post) => (
+          <div key={post.slug}>
+            <Link
+              href={`/${post.category}/${post.slug}`}
+              className="relative group border shadow rounded-2xl overflow-hidden h-96 p-4 block flex flex-col hover:bg-primary hover:bg-opacity-10 duration-200 ease-linear cursor-pointer"
+            >
+              <p className="absolute -bottom-1/2 overflow-hidden left-0 text-[450px] font-black hover:text-primary2 text-gray2 opacity-10">
+                {post.title[0]}
+              </p>
+              <h3 className="font-semibold text-2xl group-hover:text-primary2 duration-100 ease-linear">
+                {post.title}
+              </h3>
+              <p className="text-gray2 text-sm mt-2 mb-1">{post.desc}</p>
+            </Link>
+          </div>
+        ))}
       </div>
     </>
   );
