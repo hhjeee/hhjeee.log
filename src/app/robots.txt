@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hhjeee.com
+Sitemap: https://hhjeee.com/sitemap.xml
