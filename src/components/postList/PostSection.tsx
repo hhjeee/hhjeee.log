@@ -21,7 +21,7 @@ const PostSection = ({
         categories={categories}
         selectedCategory={selectedCategory || null}
       />
-      {selectedCategory == 'DeepDive' ? (
+      {selectedCategory?.includes('DeepDive') ? (
         <BookPost posts={posts} />
       ) : (
         <Post posts={posts} />
