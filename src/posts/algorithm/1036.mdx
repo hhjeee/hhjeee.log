@@ -1,0 +1,350 @@
+---
+title: '[백준 1036] 36진수 - C++'
+date: 2025-03-27
+---
+
+[https://www.acmicpc.net/problem/1036](https://www.acmicpc.net/problem/1036)<br />
+애증의 문제 … 12번만에 풀었다..
+
+---
+
+## 문제
+
+**문제**
+
+36진법의 숫자는 0부터 9까지의 수와 알파벳 A에서 Z로 나타낸다. A부터 Z까지 알파벳은 10부터 35에 차례대로 대응한다.
+
+36진법의 수 N개가 주어진다. 36진법 숫자(0-9, A-Z) 중에서 K개의 숫자를 고른다. 그러고 나서 N개의 수 모두에서 나타난 그 숫자를 Z로 바꾼다. 그 이후에 N개의 수를 모두 더한다.
+
+이때 가능한 합의 최댓값을 구하는 프로그램을 작성하시오. 합의 최댓값도 36진수로 출력한다.
+
+**입력**
+
+첫째 줄에 수의 개수 N이 주어진다. 둘째 줄부터 N개의 줄에 수가 주어진다. N은 최대 50이고, 수의 길이도 최대 50이다. 마지막 줄에 K가 주어진다. K는 36보다 작거나 같은 자연수 또는 0이다.
+
+---
+
+## 풀이
+
+구현해야할 부분을 단계로 나누자면 다음과 같다.
+
+1. Z로 바꿀 k개의 문자 고르기
+2. 1번에서 고른 k개의 문자 Z로 변경
+3. 변경된 문자들의 합 구하기
+4. 합을 36진수로 변경하기
+
+### 1. 바꿀 k개의 문자 고르기
+
+일단 이 1번 때문에 너무 애를 먹었는데 …
+
+Z로 바꿨을때 이득이 가장 큰 문자 k개를 고르기 위해 각 문자별로 가중치를 계산하기로 했다.
+
+```cpp
+for (int i = 0; i < n; i++) {
+    cin >> str[i];
+    for (int j = 0; j < str[i].length(); j++) {
+        long long int w;
+        if (str[i][j] < 10)
+            w = (str[i][j] - 'A' + 10) * pow(36, str[i].length() - j - 1);
+        else
+            w = (str[i][j] - '0') * pow(36, str[i].length() - j - 1);
+
+        m[str[i][j]] += w;
+    }
+}
+```
+
+처음에는 이런식으로 각 문자마다 맵을 만들어서 가중치를 더해주는 방식으로 구현하고, 가중치는 각 자릿수마다 (36의 자릿수승) x (Z에서 해당 문자 차이)로 계산했다.
+
+이러니 문제가 각 문자의 길이가 최대 50이어서 36의 50승(정확히 말하면 36의 49)인 경우가 존재하고 이걸 long long int로 커버가 불가능 하다는 것 ..!
+
+<br />
+고심 끝에 생각한 방법은 아래와 같다.
+
+36 x 50 크기의 벡터를 만들어서 각 자리수마다 해당 문자가 나온 횟수를 더해준다.
+
+만약 ABC라는 문자가 있다면<br/>
+A를 36진법으로 나타내면 10 → <InlineCode>w[10][47] += 1;</InlineCode> (50자리 중에서 뒤에서 3번째)<br/>
+B를 36진법으로 나타내면 11 → <InlineCode>w[11][48] += 1;</InlineCode> (50자리 중에서 뒤에서 2번째)<br/>
+C를 36진법으로 나타내면 12 → <InlineCode>w[12][49] += 1;</InlineCode> (50자리 중에서 뒤에서 1번째)<br/>
+
+위처럼 더해준다.
+
+그럼 각 문자마다 0 0 0 ….. 1 0 1 0 뭐 이런식으로 길이 50의 벡터가 만들어진다.
+
+```cpp
+vector<string> str(n);
+vector<vector<int>> w(36, vector<int>(50, 0));
+for (int i = 0; i < n; i++) {
+    cin >> str[i];
+    for (int j = 0; j < str[i].length(); j++) {
+        char c = charToInt(str[i][j]);
+        w[c][50 - (str[i].length() - j)]++;
+    }
+}
+```
+
+이걸 다 만들고 나서 Z와의 차이를 곱해준다.<br/>
+Z가 35니까 <InlineCode>35-i</InlineCode>로 계산 !
+
+```cpp
+for (int i = 0; i < 35; i++) {
+    for (int j = 0; j < 50; j++) {
+        w[i][j] *= (35 - i);
+    }
+}
+```
+
+그리고 마지막으로 각 문자마다 만들어진 벡터를 36진법을 따르는 문자열로 변환한다.
+
+끝자리부터 계산하고 carry 라는 변수를 써서 자릿수를 넘어가면 다음 자릿수에서 계산하도록 했다.<br/>
+35이면 Z로 변환되고, 36이면 Z로 변환 → 1이 다음자릿수로 넘어가게 되는 방식 !
+
+만들어진 문자열은 앞에 0을 제거해서 후에 할 정렬이 편하도록 조정해줬다.
+
+```cpp
+map<char, string> m;
+for (int i = 0; i < 35; i++) {
+    string result = "";
+    long long int carry = 0;
+    for (int j = 49; j >= 0 || carry > 0; j--) {
+        if (j >= 0)
+        carry += w[i][j];
+        int tmp = carry % 36;
+        carry = carry / 36;
+        result = intToChar(tmp) + result;
+    }
+    int idx = 0;
+    while (idx < result.size() - 1 && result[idx] == '0') {
+        idx++;
+    }
+    result = result.substr(idx);
+    m[intToChar(i)] = result;
+}
+```
+
+이렇게하면 1번 바꿀 k개의 문자 고르기 단계가 끝난다.
+
+### 2. 1번에서 고른 k개의 문자 Z로 변경
+
+1번 단계에서 각 문제에 대해 문자열을 생성했고, 이제 이 문자열들을 정렬해주어야 한다.
+
+맵을 기반으로 벡터를 생성하고, 이를 정렬해준다.
+
+```cpp
+bool compare(pair<char, string> a, pair<char, string> b) {
+  if (a.second.length() == b.second.length())
+    return a.second > b.second;
+  else
+    return a.second.length() > b.second.length();
+}
+
+// map을 기반으로 벡터 생성 -> 정렬
+vector<pair<char, string>> v(m.begin(), m.end());
+sort(v.begin(), v.end(), compare);
+```
+
+정렬된 벡터를 기반으로 앞에 k개 만큼을 unordered_set에 넣어주고, 이 set에 들어있는 문자들을 Z로 바꿔줬다.
+
+```cpp
+// 벡터에서 높은 가중치의 k개만큼을 set으로 구성
+unordered_set<char> s;
+for (int i = 0; i < v.size() && i < k; i++) {
+    s.insert(v[i].first);
+}
+
+// 가장 낮은 수 k개를 z로 바꾸기
+for (int i = 0; i < n; i++) {
+    for (int j = 0; j < str[i].length(); j++) {
+        if (s.find(str[i][j]) != s.end())
+        str[i][j] = 'Z';
+    }
+}
+```
+
+벡터가 이미 정렬된 벡터라서 아래와 같이 앞 k만큼 보고 비교하게 할 수도 있는데, 시간복잡도 측면에서 unordered_set을 쓰는게 나을거 같아서 set을 사용했다.
+
+| 방식               | 포함 여부 확인 방식 | 시간복잡도     |
+| ------------------ | ------------------- | -------------- |
+| unordered_set      | O(1) 평균           | O(N \* L)      |
+| vector 앞 k개 순회 | O(k)                | O(N \* L \* k) |
+
+```cpp
+for (int i = 0; i < n; i++) {
+  for (int j = 0; j < str[i].length(); j++) {
+    for (int x = 0; x < k && x < v.size(); x++) {
+      if (str[i][j] == v[x].first) {
+        str[i][j] = 'Z';
+        break;
+      }
+    }
+  }
+}
+```
+
+### 3. 변경된 문자들의 합 구하기 & 합을 36진수로 변경하기
+
+원래는 각 문자들을 다 숫자로 변환 → 합 구하고 → 36진수로 변경하려 했는데,<br/>
+이것도 마찬가지로 36의 50승이 계산되는 경우가 있을 수 있어서 오버플로우가 날 것 같았다.
+
+그래서 수직 덧셈하는 것처럼 각 자릿수마다 더해서 캐리 올려주는 방식으로 계산했다.
+
+```cpp
+// 각 문자열 뒤집기 + 최대 자리수 계산
+int max_len = 0;
+for (int i = 0; i < n; i++) {
+    reverse(str[i].begin(), str[i].end());
+    max_len = max(max_len, (int)str[i].length());
+}
+
+string result = "";
+long long int carry = 0;
+for (int i = 0; i < max_len || carry > 0; i++) {
+    long long int sum = carry;
+    for (int j = 0; j < n; j++) {
+        if (str[j].length() > i) {
+            sum += charToInt(str[j][i]);
+        }
+    }
+    int tmp = sum % 36;
+    carry = sum / 36;
+    result = intToChar(tmp) + result;
+}
+
+// 앞부분 0 제거
+int idx = 0;
+while (idx < result.size() - 1 && result[idx] == '0')
+    idx++;
+result = result.substr(idx);
+
+cout << result;
+```
+
+## 전체코드
+
+앞서 설명한 전체 흐름을 구현한 C++ 코드는 다음과 같다.
+
+```cpp
+#include <algorithm>
+#include <cmath>
+#include <iostream>
+#include <map>
+#include <unordered_set>
+#include <vector>
+using namespace std;
+
+bool compare(pair<char, string> a, pair<char, string> b) {
+  if (a.second.length() == b.second.length())
+    return a.second > b.second;
+  else
+    return a.second.length() > b.second.length();
+}
+
+int charToInt(char c) {
+  if (c >= '0' && c <= '9')
+    return c - '0';
+  else
+    return c - 'A' + 10;
+}
+char intToChar(int n) {
+  if (n < 10)
+    return n + '0';
+  else
+    return n - 10 + 'A';
+}
+
+int main() {
+  ios_base::sync_with_stdio(false);
+  cin.tie(0);
+
+  // 0~9, A~Z(10~35)
+  int n, k;
+  cin >> n;
+
+  vector<string> str(n);
+  vector<vector<int>> w(36, vector<int>(50, 0));
+  for (int i = 0; i < n; i++) {
+    cin >> str[i];
+    for (int j = 0; j < str[i].length(); j++) {
+      char c = charToInt(str[i][j]);
+      w[c][50 - (str[i].length() - j)]++;
+    }
+  }
+
+  cin >> k;
+
+  for (int i = 0; i < 35; i++) {
+    for (int j = 0; j < 50; j++) {
+      w[i][j] *= (35 - i);
+    }
+  }
+
+  map<char, string> m;
+  for (int i = 0; i < 35; i++) {
+    string result = "";
+    long long int carry = 0;
+    for (int j = 49; j >= 0 || carry > 0; j--) {
+      if (j >= 0)
+        carry += w[i][j];
+      int tmp = carry % 36;
+      carry = carry / 36;
+      result = intToChar(tmp) + result;
+    }
+    int idx = 0;
+    while (idx < result.size() - 1 && result[idx] == '0') {
+      idx++;
+    }
+    result = result.substr(idx);
+    m[intToChar(i)] = result;
+  }
+
+  // map을 기반으로 벡터 생성 -> 정렬
+  vector<pair<char, string>> v(m.begin(), m.end());
+  sort(v.begin(), v.end(), compare);
+
+  // 벡터에서 높은 가중치의 k개만큼을 set으로 구성
+  unordered_set<char> s;
+  for (int i = 0; i < v.size() && i < k; i++) {
+    s.insert(v[i].first);
+  }
+
+  // 가장 낮은 수 k개를 z로 바꾸기
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < str[i].length(); j++) {
+      if (s.find(str[i][j]) != s.end())
+        str[i][j] = 'Z';
+    }
+  }
+
+  // 각 문자열 뒤집기 + 최대 자리수 계산
+  int max_len = 0;
+  for (int i = 0; i < n; i++) {
+    reverse(str[i].begin(), str[i].end());
+    max_len = max(max_len, (int)str[i].length());
+  }
+
+  string result = "";
+  long long int carry = 0;
+  for (int i = 0; i < max_len || carry > 0; i++) {
+    long long int sum = carry;
+    for (int j = 0; j < n; j++) {
+      if (str[j].length() > i) {
+        sum += charToInt(str[j][i]);
+      }
+    }
+    int tmp = sum % 36;
+    carry = sum / 36;
+    result = intToChar(tmp) + result;
+  }
+
+  // 앞부분 0 제거
+  int idx = 0;
+  while (idx < result.size() - 1 && result[idx] == '0')
+    idx++;
+  result = result.substr(idx);
+
+  cout << result;
+
+  return 0;
+}
+```
