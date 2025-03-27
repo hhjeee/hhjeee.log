@@ -19,6 +19,7 @@
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "rehype": "^13.0.2",
     "rehype-pretty-code": "^0.14.0",
+    "remark-gfm": "^4.0.1",
     "shiki": "^1.26.1",
     "tailwind-scrollbar-hide": "^2.0.0",
     "unist-util-visit": "^5.0.0"

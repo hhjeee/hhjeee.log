@@ -2,6 +2,7 @@ import { serialize } from 'next-mdx-remote/serialize';
 import { notFound } from 'next/navigation';
 
 import rehypePrettyCode from 'rehype-pretty-code';
+import remarkGfm from 'remark-gfm';
 
 import {
   getCategories,
@@ -66,6 +67,7 @@ const PostPage = async ({ params }: { params: postPageProps }) => {
 
   const mdxContent = await serialize(content, {
     mdxOptions: {
+      remarkPlugins: [remarkGfm],
       rehypePlugins: [
         [rehypeExtractHeadings, headings],
         [rehypePrettyCode, prettyCodeOptions],
