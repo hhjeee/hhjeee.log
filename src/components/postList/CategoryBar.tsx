@@ -22,7 +22,7 @@ const CategoryBar = ({
   };
 
   return (
-    <div className="fixed z-10 pt-2 left-1/2 transform -translate-x-1/2 w-[80%] bg-white border-b-2 border-gray1">
+    <div className="z-10 w-full bg-white border-b-2 border-gray1">
       {isBelowSM ? (
         <CustomSelect
           options={categories}

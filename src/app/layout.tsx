@@ -25,13 +25,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full bg-white">
-      <meta
-        name="naver-site-verification"
-        content="881b44c959e852e998ebc11121f03a26e51c9572"
-      />
-      <body className={`${pretendard.className} h-full`}>
+      <body
+        className={`${pretendard.className} h-full mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0`}
+      >
         <Header />
-        <div className="pt-[3.5rem] h-full">{children}</div>
+        {children}
       </body>
     </html>
   );

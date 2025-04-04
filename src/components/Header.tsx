@@ -3,9 +3,9 @@ import Link from 'next/link';
 
 const Header = () => {
   return (
-    <div className="fixed bg-white w-full h-[3.5rem] z-10 px-[2rem] sm:px-[5rem] border-b-2 border-[#f2f4f6] flex items-center justify-between">
+    <div className="bg-white w-full py-6 z-10 flex justify-between items-center">
       <Link href="/">
-        <div className="text-lg font-semibold">
+        <div className="text-xl font-medium ">
           <span className="text-primary2">✪</span> hhjeee.log
         </div>
       </Link>

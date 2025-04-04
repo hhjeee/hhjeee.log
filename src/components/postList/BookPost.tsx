@@ -6,7 +6,7 @@ import { PostData } from '@/types/post';
 const BookPost = ({ posts }: { posts: PostData[] }) => {
   return (
     <>
-      <div className="mt-[4rem] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
         <div className="h-96 sm:block hidden">
           <Image
             src={posts[0].cover!}

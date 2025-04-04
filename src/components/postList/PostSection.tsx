@@ -16,7 +16,7 @@ const PostSection = ({
   selectedCategory?: string;
 }) => {
   return (
-    <div className="flex flex-col w-[80%] mx-auto pb-[2rem]">
+    <div className="flex flex-col w-full pb-[2rem]">
       <CategoryBar
         categories={categories}
         selectedCategory={selectedCategory || null}

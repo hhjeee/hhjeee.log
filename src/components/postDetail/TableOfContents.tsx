@@ -7,12 +7,12 @@ import useMediaQuery from '@/hooks/useMediaQuery';
 
 const TableOfContents = ({ headings }: { headings: Heading[] }) => {
   const activeIds = useIntersectionObserver('h1, h2, h3');
-  const isBelowLg = useMediaQuery(1024);
+  const isBelowXL = useMediaQuery(1280);
 
   const handleClick = (id: number) => {
     const element = document.getElementById(id.toString());
     if (element) {
-      const offset = 80; // header 4rem + a
+      const offset = 80;
       const elementPosition =
         element.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition - offset;
@@ -32,7 +32,7 @@ const TableOfContents = ({ headings }: { headings: Heading[] }) => {
           <button
             onClick={() => handleClick(heading.id)}
             className={`text-gray2 no-underline hover:font-semibold ${
-              isBelowLg ? 'text-base' : 'text-sm'
+              isBelowXL ? 'text-base' : 'text-sm'
             } text-start ${
               activeIds.includes(heading.id.toString())
                 ? 'text-primary font-semibold'
@@ -46,13 +46,13 @@ const TableOfContents = ({ headings }: { headings: Heading[] }) => {
     });
 
   if (headings.length === 0) return null;
-  return isBelowLg ? (
-    <nav className="lg:hidden">
+  return isBelowXL ? (
+    <nav className="xl:hidden">
       {renderHeadings(headings)}
       <hr className="my-[1rem] h-0.5 bg-gray1" />
     </nav>
   ) : (
-    <nav className="absolute top-0 left-full w-[50%] h-full hidden lg:block">
+    <nav className="absolute top-0 left-full w-[30%] h-full hidden xl:block">
       <div className="sticky ml-6 top-20 overflow-visible">
         {renderHeadings(headings)}
       </div>

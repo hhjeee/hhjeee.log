@@ -7,7 +7,7 @@ import { PostData } from '@/types/post';
 
 const Post = ({ posts }: { posts: PostData[] }) => {
   return (
-    <div className="mt-[3rem] columns-1 sm:columns-2 gap-2">
+    <div className="columns-1 sm:columns-2 gap-2">
       {posts.map((post) => (
         <div key={post.slug}>
           <Link
