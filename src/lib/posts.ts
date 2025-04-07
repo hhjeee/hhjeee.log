@@ -119,6 +119,6 @@ export async function getSiteMapPostList() {
     url: `${baseUrl}/${category}/${slug}`,
     lastModified: new Date(date).toISOString(),
   }));
-  console.log(sitemapPostList);
+
   return sitemapPostList;
 }
