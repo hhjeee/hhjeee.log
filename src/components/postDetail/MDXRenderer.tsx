@@ -13,6 +13,8 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import InlineCodeBlock from '../InlineCodeBlock';
 import ErrorBox from './contentBox/ErrorBox';
 import HighlightBox from './contentBox/HighlightBox';
+import Highlighter from './contentBox/Highlighter';
+import WavyLine from './contentBox/WavyLine';
 
 const ImageComponent: MDXComponents = {
   img: ({ src, alt, width = 500, height = 300, ...props }) => {
@@ -35,6 +37,8 @@ const CustomComponents: MDXComponents = {
   Error: ErrorBox,
   Highlight: HighlightBox,
   InlineCode: InlineCodeBlock,
+  Wavy: WavyLine,
+  Highlighter: Highlighter,
 };
 
 const MDXRenderer = ({ content }: { content: MDXRemoteSerializeResult }) => {
