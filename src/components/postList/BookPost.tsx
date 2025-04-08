@@ -14,7 +14,7 @@ const BookPost = ({ posts }: { posts: PostData[] }) => {
             width={500}
             height={500}
             className="h-full w-full object-contain"
-            placeholder="blur"
+            // placeholder="blur"
           />
         </div>
         {posts.map((post) => (
