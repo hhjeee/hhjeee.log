@@ -17,22 +17,29 @@ const BookPost = ({ posts }: { posts: PostData[] }) => {
             // placeholder="blur"
           />
         </div>
-        {posts.map((post) => (
-          <div key={post.slug}>
-            <Link
-              href={`/${post.category}/${post.slug}`}
-              className="relative group border shadow rounded-2xl overflow-hidden h-96 p-4 block flex flex-col hover:bg-primary hover:bg-opacity-10 duration-200 ease-linear cursor-pointer"
-            >
-              <p className="absolute -bottom-1/2 overflow-hidden left-0 text-[450px] font-black hover:text-primary2 text-gray2 opacity-10">
-                {post.title[0]}
-              </p>
-              <h3 className="font-semibold text-2xl group-hover:text-primary2 duration-100 ease-linear">
-                {post.title}
-              </h3>
-              <p className="text-gray2 text-sm mt-2 mb-1">{post.desc}</p>
-            </Link>
-          </div>
-        ))}
+        {posts.map((post) => {
+          const isKorean = /[가-힣]/.test(post.title[0]);
+
+          return (
+            <div key={post.slug}>
+              <Link
+                href={`/${post.category}/${post.slug}`}
+                className="relative group border shadow rounded-2xl overflow-hidden h-96 p-4 block flex flex-col hover:bg-primary hover:bg-opacity-10 duration-200 ease-linear cursor-pointer"
+              >
+                <p
+                  className={`absolute -bottom-1/2 overflow-hidden font-black hover:text-primary2 text-gray2 opacity-10 
+                      ${isKorean ? 'text-[400px] -left-1/4' : 'text-[440px] left-0'}`}
+                >
+                  {post.title[0]}
+                </p>
+                <h3 className="font-semibold text-2xl group-hover:text-primary2 duration-100 ease-linear">
+                  {post.title}
+                </h3>
+                <p className="text-gray2 text-sm mt-2 mb-1">{post.desc}</p>
+              </Link>
+            </div>
+          );
+        })}
       </div>
     </>
   );
