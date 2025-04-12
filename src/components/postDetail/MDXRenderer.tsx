@@ -36,9 +36,17 @@ const CustomComponents: MDXComponents = {
   ImageComponent,
   Error: ErrorBox,
   Highlight: HighlightBox,
-  InlineCode: InlineCodeBlock,
   Wavy: WavyLine,
   Highlighter: Highlighter,
+  code: ({ children, ...props }) => {
+    const isCodeBlock = 'data-language' in props;
+
+    if (isCodeBlock) {
+      return <code {...props}>{children}</code>;
+    }
+
+    return <InlineCodeBlock>{children}</InlineCodeBlock>;
+  },
 };
 
 const MDXRenderer = ({ content }: { content: MDXRemoteSerializeResult }) => {

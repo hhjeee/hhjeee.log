@@ -1,6 +1,6 @@
-// import { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
-const InlineCodeBlock = ({ children }: { children: string }) => {
+const InlineCodeBlock = ({ children }: { children: ReactNode }) => {
   return (
     <span className="bg-gray1 rounded w-fit p-1 font-medium">{children}</span>
   );
