@@ -93,7 +93,7 @@ setup이라는 파일 하나만 파싱한다고 가정하고, 이를 메인페�
 </Error>
 
 React에서 렌더링하려는 값이 Date 객체인 경우 발생하는 것으로 Date 객체를 직접 렌더링 할 수 없으므로, 문자열로 변환해야 한다.
-위의 <InlineCode>\{meta.date\}</InlineCode>를 <InlineCode>\{new Date(meta.date).toLocaleDateString()\}</InlineCode> 로 수정하였다.
+위의 `\{meta.date\}`를 `\{new Date(meta.date).toLocaleDateString()\}` 로 수정하였다.
 
 ### ⚠️ 발생한 문제: 마크다운 문법이 적용되지 않음
 
