@@ -10,11 +10,11 @@ import type { MDXComponents } from 'mdx/types';
 
 import LoadingSpinner from '@/components/LoadingSpinner';
 
-import InlineCodeBlock from '../InlineCodeBlock';
-import ErrorBox from './contentBox/ErrorBox';
-import HighlightBox from './contentBox/HighlightBox';
-import Highlighter from './contentBox/Highlighter';
-import WavyLine from './contentBox/WavyLine';
+import ErrorBox from './design/ErrorBox';
+import HighlightBox from './design/HighlightBox';
+import Highlighter from './design/Highlighter';
+import InlineCodeBlock from './design/InlineCodeBlock';
+import WavyLine from './design/WavyLine';
 
 const ImageComponent: MDXComponents = {
   img: ({ src, alt, width = 500, height = 300, ...props }) => {
