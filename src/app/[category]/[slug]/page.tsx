@@ -12,10 +12,12 @@ import {
 } from '@/lib/posts';
 import rehypeExtractHeadings, { Heading } from '@/lib/rehypeExtractHeading';
 
-import MDXRenderer from '@/components/postDetail/MDXRenderer';
-import PostHeader from '@/components/postDetail/PostHeader';
-import ScrollStatusBar from '@/components/postDetail/ScrollStatusBar';
-import TableOfContents from '@/components/postDetail/TableOfContents';
+import {
+  MDXRenderer,
+  PostHeader,
+  ScrollStatusBar,
+  TableOfContents,
+} from '@/components/postDetail';
 
 export async function generateStaticParams() {
   const categorySlugs = await getCategoriesWithSlugs();
