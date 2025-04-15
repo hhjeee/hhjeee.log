@@ -1,0 +1,143 @@
+---
+title: '[프로그래머스] 단어퍼즐 - C++'
+date: 2025-04-15
+desc: substr와 참조 전달
+---
+
+https://school.programmers.co.kr/learn/courses/30/lessons/12983
+
+---
+
+dp를 사용해서 풀었는데,<br/>
+`dp[i]`에는 `t[i]`까지 strs 내 문자들을 몇개 사용해서 만들 수 있는지(최솟값)를 저장한다.
+
+```cpp
+for(int i=1; i<=n; i++){
+    for(string str:strs){
+        int len = str.length();
+
+        if(len > i) continue;
+        if(dp[i-len] == INT_MAX) continue;
+
+        if(t.substr(i-len, len) == str){
+            dp[i] = min(dp[i], dp[i-len]+1);
+        }
+    }
+}
+```
+
+하지만 효율성 테스트에서 시간 초과가 나서 통과하지 못했다.
+
+### 문제1 - substr
+
+`substr`은 단순히 문자열의 일부를 참조하는 게 아니라, 새로운 문자열을 **복사**해서 만드는 함수이다.
+
+`substr(start, length)`는 다음 과정을 거친다.
+
+1. 새로운 문자열 객체를 생성
+2. 원본 문자열에서 `start`부터 `length`만큼 **복사**
+3. 힙 메모리 할당
+
+`O(n)`의 시간과 공간이 드는 연산으로, 이걸 반복문 안에서 호출하면 효율성 테스트에서 시간 초과가 날 수 있다.
+
+그래서, substr를 사용해 t의 일부와 str을 비교하는 것 대신, 직접 비교하는 isSame 함수를 만드는 방식으로 수정했다.
+
+```cpp
+bool isSame(string t, string str, int i){
+    int len = str.length();
+    for(int j=0; j<len; j++){
+        if(t[i-len+j] != str[j]) return false;
+    }
+    return true;
+}
+```
+
+그치만 이것도 효율성 테스트에서 시간초과가 났다.
+
+### 문제2 - 참조 전달
+
+함수에 문자열을 string으로 넘기면 매번 복사가 발생하기 때문에 문제가 발생할 수 있다.<br/>
+함수에 인자를 참조 전달하도록 수정하여 해결했다.
+
+```cpp
+bool isSame(const string& t, const string& str, int i){
+    int len = str.length();
+    for(int j=0; j<len; j++){
+        if(t[i-len+j] != str[j]) return false;
+    }
+    return true;
+}
+```
+
+| **전달 방식**     | **의미**               | **메모리 사용** | **속도** | **수정 가능 여부**      |
+| ----------------- | ---------------------- | --------------- | -------- | ----------------------- |
+| string str        | **복사해서 전달**      | 많음            | 느림     | 함수 내부에서 수정 가능 |
+| const string& str | **원본을 그대로 참조** | 적음            | 빠름     | 수정 불가능 (const)     |
+
+```cpp
+void printString(string str) {
+	cout << str;
+}
+```
+
+1. 문자열 전체를 **새로운 메모리에 복사**해서 str이라는 변수로 전달
+2. 복사 비용이 들어감 (글자가 많을수록 시간 + 메모리 낭비)
+
+```cpp
+void printString(const string& str) {
+	cout << str;
+}
+```
+
+1. 문자열 원본을 **복사하지 않고 가리킴**
+2. 메모리 낭비 없음
+3. const -> 함수 안에서 수정 못 함
+
+| 상황                | 방식                                                   |
+| ------------------- | ------------------------------------------------------ |
+| 문자열 읽기만 할 때 | const string&                                          |
+| 문자열을 수정 할 때 | string 또는 string& (복사본을 수정하거나, 원본을 수정) |
+| 문자열 리턴할 때    | string 리턴 가능 (const string& 리턴은 위험)           |
+
+---
+
+### 최종코드
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <climits>
+using namespace std;
+
+bool isSame(const string& t, const string& str, int i){
+    int len = str.length();
+    for(int j=0; j<len; j++){
+        if(t[i-len+j] != str[j]) return false;
+    }
+    return true;
+}
+
+int solution(vector<string> strs, string t)
+{
+    int n = t.length();
+    vector<int> dp(n+1, INT_MAX);
+    dp[0] = 0;
+
+    for(int i=1; i<=n; i++){
+        for(const string& str : strs){
+            int len = str.length();
+
+            if(len > i) continue;
+            if(dp[i-len] == INT_MAX) continue;
+
+            if(isSame(t, str, i)){
+                dp[i] = min(dp[i], dp[i-len]+1);
+            }
+        }
+    }
+
+   return (dp[n] == INT_MAX) ? -1 : dp[n];
+}
+```
