@@ -2,11 +2,13 @@
   "name": "mylog",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "new-post": "node --loader ts-node/esm scripts/newPost.ts"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.15",
@@ -26,15 +28,17 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^5.2.1",
-    "@types/node": "^20",
+    "@types/node": "^22.14.1",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
     "eslint-config-prettier": "^9.1.0",
+    "execa": "^9.5.2",
     "postcss": "^8",
     "prettier": "^3.4.2",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }
