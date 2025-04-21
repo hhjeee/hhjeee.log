@@ -1,0 +1,171 @@
+---
+title: 'CommonJS vs ESM'
+date: '2025-04-21'
+desc: 'Node.js의 모듈 시스템 - CommonJS와 ECMAScript Modules 비교하기'
+---
+
+Node.js에는 CommonJS(CJS)와 ECMAScript Modules(ESM)이라는 두 가지 모듈 시스템이 존재한다.<br/>
+두 시스템은 모듈을 내보내고 가져오는 문법이 다르고, 서로 호환되지 않기 때문에 사용 시 각 시스템에 맞는 적절한 문법을 사용해야한다.
+
+## CommonJS vs ECMAScript Modules
+
+### CommonJS (CJS)
+
+```jsx title="math.cjs"
+const add = (a, b) => a + b;
+const multiply = (a, b) => a * b;
+
+module.exports = {
+  add,
+  multiply,
+};
+```
+
+```jsx title="app.cjs(사용)"
+const math = require('./math.cjs');
+
+console.log(math.add(2, 3)); // 5
+console.log(math.multiply(4, 5)); // 20
+```
+
+- require() 함수를 사용해 모듈을 불러온다. (ESM에서는 사용할 수 없음)
+- 파일 확장자를 생략해도 된다.
+- 동적으로 모듈 경로를 설정하는 것이 가능하다.
+  ```js
+  const lang = 'ko';
+  const locale = require(`./i18n/${lang}.js`);
+  ```
+- 조건부 로딩이 가능하다.
+  ```js
+  if (process.env.NODE_ENV === 'development') {
+    const dev = require('./dev-tools.js');
+    dev.init();
+  }
+  ```
+- 정적 분석이 어렵고, 번들러가 어떤 코드를 사용하는지 판단하기 힘들어 Tree Shaking이 어렵다.
+- CJS에서 ESM 모듈을 불러오려면 `import()`를 사용해야 하며, 파일 확장자를 필수로 지정해야 한다.
+  ```jsx
+  (async () => {
+    const esmModule = await import('./math.mjs');
+    console.log(esmModule.add(2, 3));
+  })();
+  ```
+
+### ECMAScript Modules (ESM)
+
+```jsx title="math.mjs"
+export const add = (a, b) => a + b;
+export const multiply = (a, b) => a * b;
+```
+
+```jsx title="app.mjs(사용)"
+import { add, multiply } from './math.mjs';
+
+console.log(add(2, 3)); // 5
+console.log(multiply(4, 5)); // 20
+```
+
+- import/export 구문을 사용한다.
+- 파일 확장자를 명시해야 한다.
+- default export를 통해 특정 모듈 하나만 기본값으로 내보낼 수 있다.
+  - `export default function add(a, b) { return a + b; }`
+- 정적 방식(import 시점에 분석)이므로 조건부 로딩이 불가하다. -> 해결하려면 `import()` 사용
+  ```js
+  // ❌
+  if (process.env.NODE_ENV === 'development') {
+    import { foo } from './dev-tools.js'; // SyntaxError
+  }
+  ```
+- 구문 분석 단계에서 모듈을 불러오기 때문에 동적으로 값을 넣거나 바꾸기 어렵다. -> 해결하려면 `import()` 사용
+  ```js
+  // ❌
+  const lang = 'ko';
+  import(`./i18n/${lang}.js`); // SyntaxError
+  ```
+- 동적으로 모듈을 불러오기 위해서는 `import()`를 사용한다.
+- 정적 분석 방식이기 때문에 Tree Shaking이 가능하다.
+- CommonJS 모듈을 불러올 수 있다.
+
+  ```jsx
+  import cjsModule from './math.cjs';
+
+  console.log(cjsModule.add(1, 2));
+  ```
+
+---
+
+|                | **CommonJS (CJS)** | **ECMAScript Modules (ESM)** |
+| -------------- | ------------------ | ---------------------------- |
+| 파일 확장자    | .js, .cjs          | .mjs, .js + "type": "module" |
+| 확장자 생략    | 가능               | 불가능                       |
+| 내보내기       | module.exports     | export, export default       |
+| 가져오기       | require()          | import, import()             |
+| 동기/비동기    | 동기               | 비동기 (asynchronous)        |
+| 조건부 로딩    | 가능               | 불가능                       |
+| 동적 경로 지정 | 가능               | 불가능                       |
+| 트리 쉐이킹    | 어려움             | 가능                         |
+
+---
+
+그렇다면, Node.js는 어떤 기준으로 파일의 모듈 시스템을 결정할까?
+
+## Node.js의 모듈 시스템 결정 방식
+
+(https://nodejs.org/api/packages.html#determining-module-system 번역)
+
+### ECMAScript Modules
+
+Node.js는 다음과 같은 경우 **ES 모듈**로 처리한다.
+이는 node 명령어로 직접 실행했거나, import 문이나 import() 표현식으로 참조했을 때 해당된다:
+
+1. 확장자가 `.mjs`인 파일
+2. 확장자가 `.js`지만, 가장 가까운 상위의 `package.json` 파일에 최상위 `"type": "module"` 필드가 있는 경우
+3. `--eval` 인자나 표준 입력(`STDIN`)을 통해 전달된 문자열이 `--input-type=module` 플래그와 함께 전달된 경우
+4. 다음과 같은 문법이 포함된 코드:
+   - `import`, `export`, `import.meta` 등 ES 모듈에서만 사용 가능한 문법
+   - 단, 해당 코드에 `.mjs`, `.cjs` 확장자나 `“module”` 또는 `“commonjs"`를 가지는 `“type"` 필드, `--input-type` 플래그 등 명시적인 모듈 유형 표시가 없는 경우
+   - 참고: 동적 `import()` 표현식은 CommonJS, ES 모듈 둘 다에서 사용 가능하며, 해당 파일을 ES 모듈로 강제하지는 않음.
+
+### CommonJS
+
+Node.js는 다음과 같은 경우 **CommonJS 모듈**로 처리한다.:
+
+1. 확장자가 `.cjs`인 파일
+2. 확장자가 `.js`지만, 가장 가까운 상위의 package.json 파일에 최상위 `"type": "commonjs"` 필드가 있는 경우
+3. `--eval`, `--print` 인자나 표준 입력(`STDIN`)을 통해 전달된 문자열이 `--input-type=commonjs` 플래그와 함께 전달된 경우
+4. 확장자가 .js이고,
+   - 상위에 `package.json`이 없거나
+   - 해당 `package.json`에 `"type"` 필드가 없으며
+   - 해당 코드가 CommonJS 문법으로 정상적으로 실행 가능한 경우
+
+→ 즉, Node.js는 이런 “모호한” 파일을 우선 CommonJS로 해석해서 실행해보고, 실패할 경우에만 ES 모듈로 다시 해석을 시도한다.
+
+**주의 사항**
+
+모호한 파일 안에 ES 모듈 문법을 섞어 쓰면 성능 저하가 발생할 수 있으므로, 가능한 한 명시적으로 작성하는 것이 권장된다.
+특히 모든 소스 코드가 CommonJS로 되어 있더라도 `package.json`에 `"type"` 필드를 반드시 명시적으로 포함하는 것이 좋다.
+향후 Node.js의 기본 모듈 타입이 바뀌더라도 패키지의 안정성을 보장할 수 있고, 빌드 도구나 로더들이 파일을 어떻게 해석해야 할지 더 쉽게 판단할 수 있기 때문이다.
+
+---
+
+### 문법 감지
+
+Node.js는 모듈 유형이 명확하지 않은 모호한 입력의 경우, 소스 코드를 직접 분석하여 ES 모듈 문법이 포함되어 있는지 감지한다. 만약 ESM 문법이 감지되면 해당 입력은 ES 모듈로 처리된다.
+
+**모호한 입력이란:**
+
+다음 중 하나에 해당하는 경우를 말한다:
+
+1. 확장자가 `.js`거나 확장자가 없는 파일;
+   `package.json` 파일이 없거나, 있더라도 `"type"` 필드를 포함하고 있지 않은 경우
+2. `--eval` 또는 표준 입력(`STDIN`)으로 전달된 문자열에 `-input-type` 플래그가 명시되지 않은 경우
+
+**ES 모듈 문법**
+
+ES모듈 구문은 CommonJS로 평가될때 에러가 나는 구문으로 정의된다. 이는 다음을 포함한니다:
+
+- `import` 문 (단, CommonJS에서 유효한 `import()`는 제외)
+- `export` 문
+- `import.meta` 참조
+- 모듈 최상단의 `await`
+- CommonJS 래퍼 변수(`require`, `module`, `exports`, `__dirname`, `__filename`)의 렉시컬 재정의 (렉시컬 재정의 => let이나 const로 다시 선언(var 제외))
