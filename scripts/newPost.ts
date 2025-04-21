@@ -16,8 +16,10 @@ function ask(question: string): Promise<string> {
 
 (async () => {
   const category = await ask('카테고리 입력 : ');
-  const title = await ask('포스트 제목 입력: ');
-  const slug = title.toLowerCase().replace(/\s+/g, '-');
+  const fileName = await ask('파일명 입력: ');
+  const title = await ask('제목 입력: ');
+
+  const slug = fileName.toLowerCase().replace(/\s+/g, '-');
   const date = new Date().toISOString().split('T')[0];
 
   const frontmatter = `---

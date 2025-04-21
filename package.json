@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "new-post": "node --loader ts-node/esm scripts/newPost.ts"
+    "new-post": "node --import ./register.js scripts/newPost.ts"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.15",
