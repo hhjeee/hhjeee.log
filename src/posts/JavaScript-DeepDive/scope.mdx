@@ -81,7 +81,7 @@ console.log(z); //ReferenceError: z is not defined
 스코프는 함수의 중첩에 의해 계층적 구조를 갖는다. 중첩 함수의 지역 스코프는 중첩 함수를 포함하는 외부 함수의 지역 스코프와 계층적 구조를 갖는다. 이때 외부 함수의 지역 스코프를 중첩 함수의 상위 스코프라 한다.
 위 예제에서 나타나는 스코프체인을 그림으로 나타내면 아래와 같다.
 
-![scope_chain](/images/posts/JS&TS/scope.png)
+![scope_chain](/images/posts/JavaScript-DeepDive/scope.png)
 
 모든 스코프는 하나의 계층적 구조로 연결되며, 모든 지역 스코프의 최상위 스코프는 전역 스코프이다.
 이렇게 스코프가 계층적으로 연결된 것을 스코프 체인 이라고 한다. 위 그림에서의 스코프 체인은 최상위 스코프인 전역 스코프, 전역에서 선언된 outer 함수의 지역 스코프, outer 함수 내부에서 선언된 inner 함수의 지역 스코프로 이루어진다.
