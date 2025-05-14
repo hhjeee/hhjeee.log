@@ -1,0 +1,84 @@
+---
+title: 'promise 코드의 실행 결과'
+date: 2025-04-11
+desc: promise 코드의 실행 결과 설명하기
+---
+
+https://www.maeil-mail.kr/question/214
+
+다음 코드의 실행 결과 설명하기
+
+```jsx
+setTimeout(() => {
+  console.log('1');
+  setTimeout(() => {
+    console.log('2');
+  });
+  Promise.resolve().then(() => console.log('3'));
+  console.log('4');
+});
+
+Promise.resolve().then(() => {
+  console.log('5');
+  setTimeout(() => {
+    console.log('6');
+  });
+  Promise.resolve().then(() => console.log('7'));
+  console.log('8');
+});
+
+console.log('9');
+```
+
+실행 결과: 9 → 5 → 8 → 7 → 1 → 4 → 3 → 6 → 2
+
+🌟 알아둘 것
+
+함수 호출은 콜 스택으로<br/>
+setTimeout의 콜백함수는 타이머 만료 후 태스크 큐에 등록<br/>
+Promise의 후속 처리 함수는 마이크로태스크 큐에 등록<br/>
+콜 스택이 비면 마이크로태스크 큐 → 태스크 큐 순 확인, 내부 함수를 콜 스택으로
+
+---
+
+1. 동기 코드 먼저 실행(콜 스택)
+
+   `console.log('9')` 실행 →<Highlighter>9</Highlighter>
+   출력
+
+2. 콜 스택 비었으니 마이크로태스크 큐 확인 -> 마이크로태스크 큐에서 대기 중인 콜백을 콜 스택에 푸시해 실행
+
+   ```jsx
+   () => {
+     console.log('5');
+     setTimeout(() => console.log('6'));
+     Promise.resolve().then(() => console.log('7'));
+     console.log('8');
+   };
+   ```
+
+   <Highlighter>5</Highlighter> 출력 → `() => console.log(’6’)` 콜백 함수 타이머
+   등록 후 태스크 큐 등록 → `() => console.log('7')` 마이크로태스크 큐 등록 →
+   <Highlighter>8</Highlighter> 출력
+
+3. 마이크로태스크 큐의 `console.log('7')` 실행 → <Highlighter>7</Highlighter> 출력
+4. 마이크로태스크 큐 확인 → 비었으니 태스크 큐 확인 -> 태스크 큐에서 대기 중인 콜백을 콜 스택에 푸시해 실행
+
+   ```jsx
+   () => {
+     console.log('1');
+     setTimeout(() => {
+       console.log('2');
+     });
+     Promise.resolve().then(() => console.log('3'));
+     console.log('4');
+   };
+   ```
+
+   <Highlighter>1</Highlighter> 출력 → `() => console.log(’2’)` 타이머 등록 후
+   태스크 큐 등록 → `() => console.log(’3’)` 마이크로태스크 큐 등록 →
+   <Highlighter>4</Highlighter> 출력
+
+5. 마이크로태스크 큐의 `console.log('3')` 실행 → <Highlighter>3</Highlighter> 출력
+6. 태스크 큐의 `console.log('6')` 실행 → <Highlighter>6</Highlighter> 출력
+7. 태스크 큐의 `console.log('2')` 실행 → <Highlighter>2</Highlighter> 출력
