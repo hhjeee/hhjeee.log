@@ -25,6 +25,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full bg-white">
+      <meta
+        name="google-site-verification"
+        content="8syGdrTlNXIdG3KAi4vCLQ5lRzMtvT7aezbbLn7Gn5Y"
+      />
       <body
         className={`${pretendard.className} h-full mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0`}
       >
