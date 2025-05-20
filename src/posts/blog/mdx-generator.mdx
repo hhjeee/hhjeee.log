@@ -1,0 +1,234 @@
+---
+title: '새 게시글을 명령어로 빠르게 생성하기'
+date: '2025-04-21'
+desc: 'MDX 템플릿과 프론트매터가 자동으로 작성되는 스크립트 구성하기'
+---
+
+## 문제상황
+
+지금은 새로운 게시글을 작성하려면
+
+1. 게시물들을 저장하는 posts 폴더 내에서
+2. 카테고리를 의미하는 폴더를 만들거나, 이미 존재한다면 해당 카테고리 내에
+3. mdx파일을 만들고
+4. 제목, 날짜 등등을 작성하고 본문 내용 작성
+
+을 거쳐야한다. 매번 반복해야 하는 파일 생성이나 프론트매터 작성을 자동화 하면 좋을것 같다는 생각이 들었다.
+
+## 필요 기능 정의
+
+- 카테고리와 파일명 받아 posts/카테고리/파일명.mdx 파일 생성
+- 제목 받아 프론트매터에 제목 채우기
+- 날짜 채우고, 설명(desc)는 비워두기(직접 작성)
+- 파일 생성이 완료되면 해당 파일을 열어 바로 본문 작성이 가능하게 하기
+
+## 스크립트 작성
+
+1. 입력받기(카테고리, 파일명, 제목) <br/>
+   readline.createInterface()를 통해 CLI 인터페이스를 생성한다.
+   ask 함수는 질문 후 응답을 Promise 형태로 받는 함수이다.
+
+```js
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+function ask(question: string): Promise<string> {
+  return new Promise((resolve) => {
+    rl.question(question, resolve);
+  });
+}
+```
+
+2. 정보 입력받기 / 슬러그 및 날짜 생성 <br/>
+   필요한 정보들을 입력받는다.
+   파일명에서 공백을 하이픈으로 치환해 안전한 형태로 변환하고, date 원하는 형태(2024-04-21)로 추출한다.
+
+```js
+const category = await ask('카테고리 입력 : ');
+const fileName = await ask('파일명 입력: ');
+const title = await ask('제목 입력: ');
+
+const slug = fileName.toLowerCase().replace(/\s+/g, '-');
+const date = new Date().toISOString().split('T')[0];
+```
+
+3. 프론트매터 구성 <br/>
+   mdx 파일 상단에 들어가게 될 내용으로, 입력한 title과 생성한 date를 자동으로 채운다.
+   desc는 구조만 만들어두고 직접 작성할 수 있게 하였다.
+
+```js
+const frontmatter = `---
+title: '${title}'
+date: '${date}'
+desc: ''
+---
+
+여기에 본문을 작성하세요.
+
+`;
+```
+
+4. 파일 경로 생성 및 디렉토리/파일 생성 <br/>
+   src/posts 내 카테고리 기반 경로와, 그 밑에 mdx 파일의 전체 경로를 정의해준다.
+   mkdirSync의 recursive를 통해 상위 디렉토리가 없다면 자동으로 생성하고,
+   writeFileSync를 통해 앞서 작성한 프론트매터가 들어간 파일을 생성한다.
+
+```js
+const postDir = path.join('src/posts', category);
+const filePath = path.join(postDir, `${slug}.mdx`);
+
+fs.mkdirSync(postDir, { recursive: true });
+fs.writeFileSync(filePath, frontmatter);
+```
+
+5. 파일 생성 후 열기 <br/>
+   vscode CLI 명령어인 code를 사용하여 만들어진 파일을 바로 열도록 한다.
+
+```js
+await execa('code', ['--reuse-window', filePath]);
+```
+
+### 전체코드
+
+```js title="src/newPost.ts"
+import { execa } from 'execa';
+import fs from 'fs';
+import path from 'path';
+import readline from 'readline';
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+function ask(question: string): Promise<string> {
+  return new Promise((resolve) => {
+    rl.question(question, resolve);
+  });
+}
+
+(async () => {
+  const category = await ask('카테고리 입력 : ');
+  const fileName = await ask('파일명 입력: ');
+  const title = await ask('제목 입력: ');
+
+  const slug = fileName.toLowerCase().replace(/\s+/g, '-');
+  const date = new Date().toISOString().split('T')[0];
+
+  const frontmatter = `---
+title: '${title}'
+date: '${date}'
+desc: ''
+---
+
+여기에 본문을 작성하세요.
+
+`;
+
+  const postDir = path.join('src/posts', category);
+  const filePath = path.join(postDir, `${slug}.mdx`);
+
+  fs.mkdirSync(postDir, { recursive: true });
+  fs.writeFileSync(filePath, frontmatter);
+
+  console.log(`🌟 포스트 생성 완료: ${filePath}`);
+
+  await execa('code', ['--reuse-window', filePath]);
+  rl.close();
+})();
+```
+
+---
+
+## 스크립트 등록하기
+
+이제 만든 스크립트를 짧은 명령어로 실행할 수 있도록 해보자.
+
+`package.json` 파일의 scripts에 다음과 같이 등록하면 터미널에서 `yarn new-post` 명령어로 바로 게시물을 생성할 수 있다.
+
+```js title="package.json"
+"scripts": {
+  "new-post": "ts-node scripts/newPost.ts"
+}
+```
+
+### 에러1
+
+이제 실행해보자. 터미널에 `yarn new-post`를 실행했더니 아래와 같은 오류가 발생했다.
+
+<Error>
+$ ts-node scripts/newPost.ts<br/>
+(node:1994) Warning: To load an ES module, set "type": "module" in the package.json or use the .mjs extension.
+(Use node --trace-warnings ... to show where the warning was created)<br/>
+/Users/~/scripts/newPost.ts:1<br/>
+import fs from 'fs';<br/>
+^^^^^^
+
+SyntaxError: Cannot use import statement outside a module
+
+</Error>
+
+**문제**<br/>
+현재 newPost.ts파일 내에서 import 구문를 사용하고 있어 Node.js가 이 파일을 **ESM**으로 인식한다. 하지만 package.json에 `"type" : "module"`로 지정되어 있다거나 `.mjs`같은 확장자를 쓰지 않아 **CommonJS**로 해석된다.
+그 결과, import 구문을 지원하지 않아 SyntaxError가 발생한 것이다.
+
+**해결**<br/>
+package.json에 `"type": "module"`을 추가해 ESM이라는 것을 명시해준다.
+
+```js title="package.json"
+"type": "module",
+"scripts": {
+"new-post": "ts-node scripts/new-post.ts"
+}
+```
+
+### 에러2
+
+그랬더니 다음과 같은 오류가 다시 발생했다.
+
+<Error>
+  TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for
+  /Users/~/scripts/newPost.ts
+</Error>
+
+**문제**<br/>
+Node.js는 .ts 파일을 기본적으로 해석할 수 없으며, ESM 환경에서는 ts-node를 사용하더라도 .ts 확장자를 직접 실행하려면 **loader**를 명시해야 한다.
+
+**해결**<br/>
+`--loader ts-node/esm`: TypeScript ESM 환경에서 ts 파일을 실행할 수 있도록 ts-node의 로더를 명시해주었다.
+
+```js
+"scripts": {
+  "new-post": "node --loader ts-node/esm scripts/newPost.ts"
+}
+```
+
+### 경고
+
+이제 잘 실행되지만, 아래와 같은 경고문구가 뜬다.
+![new-post-cli](/images/posts/blog/new-post-cli.png)
+Node.js에서 --loader 플래그가 실험적인 기능으로 간주되며, 향후 제거될 수 있다는 내용이다.
+따라서, --loader 대신 register() 함수를 사용하는 방식으로 전환하는 것이 권장된다.
+
+```js
+"scripts": {
+    "new-post": "node --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("ts-node/esm", pathToFileURL("./"));"
+}
+```
+
+깔끔한 코드를 위해 별도 파일로 분리해주었다.
+
+```js title="register.js"
+import { register } from 'node:module';
+import { pathToFileURL } from 'node:url';
+
+register('ts-node/esm', pathToFileURL('./'));
+```
+
+```js title="package.json"
+"scripts": {
+    "new-post": "node --import ./register.js scripts/newPost.ts"
+}
+```
